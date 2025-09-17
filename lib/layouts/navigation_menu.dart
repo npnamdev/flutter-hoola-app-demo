@@ -5,6 +5,7 @@ import 'package:my_app/screens/learning_screen.dart';
 import 'package:my_app/screens/profile_screen.dart';
 import 'package:my_app/screens/notification_screen.dart';
 import 'package:my_app/screens/schedule_screen.dart';
+import 'package:my_app/core/constants/app_colors.dart';
 
 class NavigationMenu extends StatefulWidget {
   const NavigationMenu({Key? key}) : super(key: key);
@@ -48,59 +49,28 @@ class _NavigationMenuState extends State<NavigationMenu> {
           },
           destinations: const [
             NavigationDestination(
-              icon: Icon(
-                Iconsax.home_2,
-                color: Color.fromARGB(255, 159, 155, 155),
-              ),
-              selectedIcon: Icon(
-                Iconsax.home_2,
-                color: Color.fromARGB(255, 57, 39, 214),
-              ),
+              icon: Icon(Iconsax.home_2, color: AppColors.neutral),
+              selectedIcon: Icon(Iconsax.home_2, color: AppColors.primary),
               label: 'Trang chủ',
             ),
             NavigationDestination(
-              icon: Icon(
-                Iconsax.calendar_2,
-                color: Color.fromARGB(255, 159, 155, 155),
-              ),
-              selectedIcon: Icon(
-                Iconsax.calendar_2,
-                color: Color.fromARGB(255, 57, 39, 214),
-              ),
+              icon: Icon(Iconsax.calendar_2, color: AppColors.neutral),
+              selectedIcon: Icon(Iconsax.calendar_2, color: AppColors.primary),
               label: 'Lịch học',
             ),
             NavigationDestination(
-              icon: Icon(
-                Iconsax.book_saved,
-                color: Color.fromARGB(255, 159, 155, 155),
-              ),
-              selectedIcon: Icon(
-                Iconsax.book_saved,
-                color: Color.fromARGB(255, 57, 39, 214),
-              ),
+              icon: Icon(Iconsax.book_saved, color: AppColors.neutral),
+              selectedIcon: Icon(Iconsax.book_saved, color: AppColors.primary),
               label: 'Học tập',
             ),
-
             NavigationDestination(
-              icon: Icon(
-                Iconsax.notification_bing,
-                color: Color.fromARGB(255, 159, 155, 155),
-              ),
-              selectedIcon: Icon(
-                Iconsax.notification_bing,
-                color: Color.fromARGB(255, 57, 39, 214),
-              ),
+              icon: Icon(Iconsax.notification_bing, color: AppColors.neutral),
+              selectedIcon: Icon(Iconsax.notification_bing, color: AppColors.primary),
               label: 'Thông báo',
             ),
             NavigationDestination(
-              icon: Icon(
-                Iconsax.user,
-                color: Color.fromARGB(255, 159, 155, 155),
-              ),
-              selectedIcon: Icon(
-                Iconsax.user,
-                color: Color.fromARGB(255, 57, 39, 214),
-              ),
+              icon: Icon(Iconsax.user, color: AppColors.neutral),
+              selectedIcon: Icon(Iconsax.user, color: AppColors.primary),
               label: 'Tài khoản',
             ),
           ],
