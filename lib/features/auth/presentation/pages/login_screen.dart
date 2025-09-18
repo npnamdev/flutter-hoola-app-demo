@@ -101,8 +101,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     boxShadow: AppShadows.popover,
                   ),
-                  child: const Center(
-                    child: Icon(Icons.flutter_dash, color: Colors.white, size: 46),
+                  child: Center(
+                    child: SvgPicture.string(
+                      AppSvgIcons.home,
+                      width: 46,
+                      height: 46,
+                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 22),
@@ -144,7 +149,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         label: 'Email',
                         textInputType: TextInputType.emailAddress,
                         validator: (v) => (v == null || v.isEmpty) ? 'Vui lòng nhập email' : null,
-                        prefixIcon: Icons.mail_rounded,
+                        prefixSvg: SvgPicture.string(AppSvgIcons.username, width: 20, height: 20, colorFilter: const ColorFilter.mode(Color(0xFF3927D6), BlendMode.srcIn)),
+                        verticalPadding: 10,
                       ),
                       const SizedBox(height: 18),
                       _ModernField(
@@ -154,7 +160,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         obscure: _obscure,
                         onToggleObscure: () => setState(() => _obscure = !_obscure),
                         validator: (v) => (v == null || v.isEmpty) ? 'Vui lòng nhập mật khẩu' : null,
-                        prefixIcon: Icons.lock_rounded,
+                        prefixSvg: SvgPicture.string(AppSvgIcons.lock, width: 20, height: 20, colorFilter: const ColorFilter.mode(Color(0xFF3927D6), BlendMode.srcIn)),
+                        suffixWidget: IconButton(
+                          splashRadius: 20,
+                          icon: SvgPicture.string(
+                            _obscure ? AppSvgIcons.eye : AppSvgIcons.eyeoff,
+                            width: 20,
+                            height: 20,
+                            colorFilter: ColorFilter.mode(
+                              const Color(0xFF3927D6),
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                          onPressed: () => setState(() => _obscure = !_obscure),
+                        ),
+                        verticalPadding: 10,
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -219,7 +239,9 @@ class _ModernField extends StatefulWidget {
   final VoidCallback? onToggleObscure;
   final String? Function(String?)? validator;
   final TextInputType? textInputType;
-  final IconData? prefixIcon;
+  final Widget? prefixSvg;
+  final Widget? suffixWidget;
+  final double verticalPadding;
 
   const _ModernField({
     required this.controller,
@@ -229,7 +251,9 @@ class _ModernField extends StatefulWidget {
     this.onToggleObscure,
     this.validator,
     this.textInputType,
-    this.prefixIcon,
+    this.prefixSvg,
+    this.suffixWidget,
+    this.verticalPadding = 16,
   });
 
   @override
@@ -277,10 +301,14 @@ class _ModernFieldState extends State<_ModernField> {
           padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Row(
             children: [
-              if (widget.prefixIcon != null)
+              if (widget.prefixSvg != null)
                 Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 8),
-                  child: Icon(widget.prefixIcon, size: 20, color: focused ? const Color(0xFF3927D6) : Colors.grey[600]),
+                  padding: const EdgeInsets.only(left: 12, right: 10),
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: Center(child: widget.prefixSvg!),
+                  ),
                 ),
               Expanded(
                 child: TextFormField(
@@ -300,12 +328,17 @@ class _ModernFieldState extends State<_ModernField> {
                       color: Color(0xFF3927D6),
                     ),
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: widget.verticalPadding),
                   ),
                   style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                 ),
               ),
-              if (widget.isPassword)
+              if (widget.suffixWidget != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: widget.suffixWidget!,
+                )
+              else if (widget.isPassword)
                 Padding(
                   padding: const EdgeInsets.only(right: 6),
                   child: IconButton(
