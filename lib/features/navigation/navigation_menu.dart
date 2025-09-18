@@ -22,19 +22,16 @@ class _NavigationMenuState extends State<NavigationMenu> {
   ];
 
   int _currentIndexFromLocation(String location) {
-    // Match by prefix so that nested paths still highlight the tab
     for (int i = 0; i < _routes.length; i++) {
       if (location.startsWith(_routes[i])) return i;
     }
-    return 0; // default
+    return 0;
   }
 
   String _currentLocation(BuildContext context) {
     final router = GoRouter.of(context);
-    // Fallback approach: use router.routerDelegate.currentConfiguration to derive path
     final config = router.routerDelegate.currentConfiguration;
     try {
-      // currentConfiguration is a RouteMatchList; toString often contains path, but safer to use uri.toString()
       return config.uri.toString();
     } catch (_) {
       return AppRoutes.homeShell;
@@ -53,8 +50,21 @@ class _NavigationMenuState extends State<NavigationMenu> {
   Widget build(BuildContext context) {
     final location = _currentLocation(context);
     final currentIndex = _currentIndexFromLocation(location);
+
     return Scaffold(
       body: widget.child,
+
+      // ✅ Nút Học nổi lên một chút
+      floatingActionButton: Transform.translate(
+        offset: const Offset(0, 12), // chỉnh số âm để nổi cao hơn, dương để hạ thấp
+        child: _LearningFloatingButton(
+          active: currentIndex == 2,
+          onTap: () => _onTap(2, context),
+        ),
+      ),
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           border: Border(
@@ -65,7 +75,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
           ),
         ),
         child: NavigationBar(
-          height: 80,
+          height: 76,
           elevation: 0,
           indicatorColor: Colors.transparent,
           overlayColor: MaterialStateProperty.all(Colors.transparent),
@@ -73,71 +83,84 @@ class _NavigationMenuState extends State<NavigationMenu> {
           onDestinationSelected: (index) => _onTap(index, context),
           destinations: [
             NavigationDestination(
-              icon: SvgIcon(
-                AppSvgIcons.home,
-                color: AppColors.neutral,
-                size: 24,
-              ),
-              selectedIcon: SvgIcon(
-                AppSvgIcons.home,
-                color: AppColors.primary,
-                size: 24,
-              ),
+              icon: SvgIcon(AppSvgIcons.home, color: AppColors.neutral, size: 24),
+              selectedIcon: SvgIcon(AppSvgIcons.home, color: AppColors.primary, size: 24),
               label: 'Trang chủ',
             ),
             NavigationDestination(
-              icon: SvgIcon(
-                AppSvgIcons.calendar,
-                color: AppColors.neutral,
-                size: 24,
-              ),
-              selectedIcon: SvgIcon(
-                AppSvgIcons.calendar,
-                color: AppColors.primary,
-                size: 24,
-              ),
+              icon: SvgIcon(AppSvgIcons.calendar, color: AppColors.neutral, size: 24),
+              selectedIcon: SvgIcon(AppSvgIcons.calendar, color: AppColors.primary, size: 24),
               label: 'Lịch học',
             ),
-            NavigationDestination(
-              icon: SvgIcon(
-                AppSvgIcons.book,
-                color: AppColors.neutral,
-                size: 24,
-              ),
-              selectedIcon: SvgIcon(
-                AppSvgIcons.book,
-                color: AppColors.primary,
-                size: 24,
-              ),
-              label: 'Học tập',
+            const NavigationDestination(
+              icon: SizedBox.shrink(),
+              selectedIcon: SizedBox.shrink(),
+              label: '',
             ),
             NavigationDestination(
-              icon: SvgIcon(
-                AppSvgIcons.bell,
-                color: AppColors.neutral,
-                size: 24,
-              ),
-              selectedIcon: SvgIcon(
-                AppSvgIcons.bell,
-                color: AppColors.primary,
-                size: 24,
-              ),
+              icon: SvgIcon(AppSvgIcons.bell, color: AppColors.neutral, size: 24),
+              selectedIcon: SvgIcon(AppSvgIcons.bell, color: AppColors.primary, size: 24),
               label: 'Thông báo',
             ),
             NavigationDestination(
-              icon: SvgIcon(
-                AppSvgIcons.user,
-                color: AppColors.neutral,
-                size: 24,
-              ),
-              selectedIcon: SvgIcon(
-                AppSvgIcons.user,
-                color: AppColors.primary,
-                size: 24,
-              ),
+              icon: SvgIcon(AppSvgIcons.user, color: AppColors.neutral, size: 24),
+              selectedIcon: SvgIcon(AppSvgIcons.user, color: AppColors.primary, size: 24),
               label: 'Tài khoản',
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LearningFloatingButton extends StatelessWidget {
+  final bool active;
+  final VoidCallback onTap;
+  const _LearningFloatingButton({required this.active, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedScale(
+        duration: const Duration(milliseconds: 180),
+        scale: active ? 1 : 0.94,
+        curve: Curves.easeOut,
+        child: Container(
+          width: 70,
+          height: 70,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.primary,
+            border: Border.all(color: Colors.white, width: 3),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x29000000),
+                blurRadius: 18,
+                offset: Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              AnimatedOpacity(
+                opacity: active ? 1 : 0,
+                duration: const Duration(milliseconds: 320),
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [Colors.white.withOpacity(.38), Colors.transparent],
+                      radius: .85,
+                    ),
+                  ),
+                ),
+              ),
+              SvgIcon(AppSvgIcons.book, color: Colors.white, size: 28),
+            ],
+          ),
         ),
       ),
     );
