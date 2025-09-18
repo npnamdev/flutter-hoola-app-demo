@@ -23,6 +23,16 @@ class LoginController extends StateNotifier<AsyncValue<void>> {
       state = AsyncValue.error(e, st);
     }
   }
+
+  Future<void> loginWithGoogle() async {
+    state = const AsyncValue.loading();
+    try {
+      await _repo.loginWithGoogle();
+      state = const AsyncValue.data(null);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
 }
 
 final loginControllerProvider =

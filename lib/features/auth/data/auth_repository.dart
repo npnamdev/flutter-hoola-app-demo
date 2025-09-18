@@ -38,6 +38,17 @@ class AuthRepository {
     await prefs.setString(_keyUserEmail, email);
     return token;
   }
+
+  /// Mock Google login: giả lập chọn tài khoản Google (không SDK thật)
+  Future<String> loginWithGoogle() async {
+    await Future.delayed(const Duration(milliseconds: 650));
+    final fakeEmail = 'user.google@example.com';
+    final token = 'google_${DateTime.now().millisecondsSinceEpoch}';
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyToken, token);
+    await prefs.setString(_keyUserEmail, fakeEmail);
+    return token;
+  }
 }
 
 class AuthException implements Exception {
