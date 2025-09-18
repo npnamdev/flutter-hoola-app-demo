@@ -96,7 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: 120,
                   height: 120,
                   child: SvgPicture.network(
-                    'https://res.cloudinary.com/dpufemrnq/image/upload/v1758179129/demo/2.svg.svg',
+                    'https://res.cloudinary.com/dpufemrnq/image/upload/v1758179126/demo/1.svg.svg',
                     fit: BoxFit.contain,
                     placeholderBuilder: (c) => const Center(
                       child: SizedBox(

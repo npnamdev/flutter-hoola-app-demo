@@ -45,5 +45,18 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Google Sign-In URL Scheme: required so Safari/Google can redirect back to the app -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!-- REVERSED_CLIENT_ID derived from iosClientId '119423902392-j06vd8aaefnlt936rflcu5bqeasbh92t.apps.googleusercontent.com' -->
+				<string>com.googleusercontent.apps.119423902392-j06vd8aaefnlt936rflcu5bqeasbh92t</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
