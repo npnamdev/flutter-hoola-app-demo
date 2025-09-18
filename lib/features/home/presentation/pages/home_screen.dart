@@ -4,6 +4,11 @@ import 'package:my_app/widgets/event_card.dart';
 import 'package:my_app/features/home/presentation/widgets/banner/components/top_bar.dart';
 import 'package:my_app/shared/widgets/section_header.dart';
 import 'package:my_app/core/constants/app_spacing.dart';
+import 'package:my_app/features/home/presentation/sections/home_section_models.dart';
+import 'package:my_app/features/home/presentation/sections/continue_learning_section.dart';
+import 'package:my_app/features/home/presentation/sections/recommendations_section.dart';
+import 'package:my_app/features/home/presentation/sections/quick_quiz_section.dart';
+import 'package:my_app/features/home/presentation/sections/welcome_section.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -101,7 +106,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            SliverToBoxAdapter(child: AppSpacing.h20),
+            SliverToBoxAdapter(child: AppSpacing.h8),
+            WelcomeSection(
+              title: 'Chào mừng quay trở lại',
+              subtitle: 'Giữ streak hôm nay  chuỗi tiến độ!',
+              primaryLabel: 'Tiếp tục học',
+              secondaryLabel: 'Xem thống kê',
+              onPrimary: () {},
+              onSecondary: () {},
+            ),
+            // ContinueLearningSection(
+            //   items: mockContinue,
+            //   onTapItem: (c) {},
+            //   onSeeAll: () {},
+            // ),
+            // RecommendationsSection(
+            //   items: mockRecommendations,
+            //   onTapItem: (r) {},
+            //   onSeeAll: () {},
+            // ),
+            // QuickQuizSection(
+            //   meta: mockQuickQuiz,
+            //   onStart: () {},
+            //   onReview: () {},
+            // ),
+            SliverToBoxAdapter(child: AppSpacing.h12),
             const SliverToBoxAdapter(
               child: SectionHeader(
                 title: 'Khoá học của tôi',
@@ -110,12 +139,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SliverToBoxAdapter(child: AppSpacing.h12),
             const SliverToBoxAdapter(child: CourseList()),
-            SliverToBoxAdapter(child: AppSpacing.h16),
-            const SliverToBoxAdapter(
-              child: SectionHeader(title: 'Sự kiện sắp diễn ra'),
-            ),
-            SliverToBoxAdapter(child: AppSpacing.h8),
-            const SliverToBoxAdapter(child: EventCardList()),
             SliverToBoxAdapter(child: AppSpacing.h16),
             const SliverToBoxAdapter(
               child: SectionHeader(title: 'Sự kiện sắp diễn ra'),
