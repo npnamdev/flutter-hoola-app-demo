@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_app/features/navigation/navigation_menu.dart';
 import 'package:my_app/features/home/presentation/pages/home_screen.dart';
-import 'package:my_app/features/learning/presentation/pages/learning_screen.dart';
+// Replaced legacy LearningScreen with MyCoursesScreen as the primary learning tab
 import 'package:my_app/features/schedule/presentation/pages/schedule_screen.dart';
 import 'package:my_app/features/notification/presentation/pages/notification_screen.dart';
 import 'package:my_app/features/profile/presentation/pages/profile_screen.dart';
 import 'package:my_app/features/splash/splash_screen.dart';
 import 'package:my_app/features/auth/presentation/pages/login_screen.dart';
 import 'package:my_app/features/search/presentation/pages/search_screen.dart';
+import 'package:my_app/features/learning/presentation/pages/my_courses_screen.dart';
 
 // Route names constants
 class AppRoutes {
@@ -71,7 +72,7 @@ GoRouter createRouter() {
             name: 'learning',
             pageBuilder: (context, state) => _buildFadePage(
               key: state.pageKey,
-              child: const LearningScreen(),
+              child: const MyCoursesScreen(),
             ),
           ),
           GoRoute(

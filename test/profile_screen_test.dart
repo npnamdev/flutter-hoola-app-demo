@@ -5,12 +5,14 @@ import 'package:my_app/features/profile/presentation/pages/profile_screen.dart';
 
 void main() {
   testWidgets('Profile screen renders key sections', (tester) async {
-    await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: ProfileScreen())));
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: ProfileScreen())),
+    );
 
     // Allow layout
     await tester.pumpAndSettle();
 
-  // Removed title bar, so no 'Hồ sơ' text expected anymore.
+    // Removed title bar, so no 'Hồ sơ' text expected anymore.
     expect(find.text('Tiến độ học tập'), findsOneWidget);
     expect(find.text('Giới thiệu'), findsOneWidget);
     expect(find.text('TÀI KHOẢN'), findsOneWidget); // header uppercased

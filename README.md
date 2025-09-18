@@ -19,3 +19,4 @@ samples, guidance on mobile development, and a full API reference.
 
 - Màn hình tìm kiếm (`/search`): nhấn icon kính lúp ở header Home để mở giao diện tìm kiếm khoá học/sự kiện. Có gợi ý và kết quả mẫu.
 - Màn hình hồ sơ nâng cấp: gradient header, avatar viền nổi, thống kê khoá học, tiến độ học tập, giới thiệu, quick actions, nhóm cài đặt và đăng xuất.
+- Màn hình "Khoá học của tôi" (tab Learning - route `/learning`): thống kê tổng quan (tổng, đang học, hoàn thành, tiến độ TB), ô tìm kiếm nhanh, bộ lọc động (Tất cả / Đang học / Hoàn thành / Chưa học) và lưới khoá học dạng thẻ mới với thanh tiến độ, tác giả, trạng thái hoàn thành. (Đã thay thế màn hình learning cũ.)

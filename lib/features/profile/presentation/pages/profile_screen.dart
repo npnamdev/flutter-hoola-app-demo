@@ -56,9 +56,21 @@ class ProfileScreen extends ConsumerWidget {
                         const SizedBox(height: 22),
                         _StatRow(
                           stats: const [
-                            StatData(icon: Iconsax.book, label: 'Khoá học', value: '12'),
-                            StatData(icon: Iconsax.play, label: 'Đang học', value: '3'),
-                            StatData(icon: Iconsax.medal_star, label: 'Chứng chỉ', value: '5'),
+                            StatData(
+                              icon: Iconsax.book,
+                              label: 'Khoá học',
+                              value: '12',
+                            ),
+                            StatData(
+                              icon: Iconsax.play,
+                              label: 'Đang học',
+                              value: '3',
+                            ),
+                            StatData(
+                              icon: Iconsax.medal_star,
+                              label: 'Chứng chỉ',
+                              value: '5',
+                            ),
                           ],
                         ),
                         const SizedBox(height: 26),
@@ -74,7 +86,11 @@ class ProfileScreen extends ConsumerWidget {
                           title: 'Giới thiệu',
                           child: Text(
                             'Lập trình viên yêu thích Flutter & trải nghiệm người dùng. Đam mê chia sẻ kiến thức và xây dựng sản phẩm hữu ích.',
-                            style: GoogleFonts.lato(fontSize: 14, height: 1.45, color: Colors.grey[800]),
+                            style: GoogleFonts.lato(
+                              fontSize: 14,
+                              height: 1.45,
+                              color: Colors.grey[800],
+                            ),
                           ),
                         ),
                         const SizedBox(height: 18),
@@ -82,8 +98,14 @@ class ProfileScreen extends ConsumerWidget {
                           actions: [
                             QuickAction(icon: Iconsax.edit, label: 'Chỉnh sửa'),
                             QuickAction(icon: Iconsax.heart, label: 'Đã lưu'),
-                            QuickAction(icon: Iconsax.security_user, label: 'Bảo mật'),
-                            QuickAction(icon: Iconsax.award, label: 'Chứng chỉ'),
+                            QuickAction(
+                              icon: Iconsax.security_user,
+                              label: 'Bảo mật',
+                            ),
+                            QuickAction(
+                              icon: Iconsax.award,
+                              label: 'Chứng chỉ',
+                            ),
                           ],
                         ),
                         const SizedBox(height: 28),
@@ -92,9 +114,18 @@ class ProfileScreen extends ConsumerWidget {
                             SettingsGroup(
                               header: 'Tài khoản',
                               items: [
-                                SettingItem(icon: Iconsax.user, label: 'Thông tin cá nhân'),
-                                SettingItem(icon: Iconsax.password_check, label: 'Đổi mật khẩu'),
-                                SettingItem(icon: Iconsax.shield_tick, label: 'Quyền riêng tư'),
+                                SettingItem(
+                                  icon: Iconsax.user,
+                                  label: 'Thông tin cá nhân',
+                                ),
+                                SettingItem(
+                                  icon: Iconsax.password_check,
+                                  label: 'Đổi mật khẩu',
+                                ),
+                                SettingItem(
+                                  icon: Iconsax.shield_tick,
+                                  label: 'Quyền riêng tư',
+                                ),
                               ],
                             ),
                             SettingsGroup(
@@ -105,24 +136,47 @@ class ProfileScreen extends ConsumerWidget {
                                   label: 'Chế độ tối',
                                   trailing: Consumer(
                                     builder: (context, ref, _) {
-                                      final enabled = ref.watch(darkModeProvider);
+                                      final enabled = ref.watch(
+                                        darkModeProvider,
+                                      );
                                       return _DarkModeToggle(
                                         value: enabled,
-                                        onChanged: (v) => ref.read(darkModeProvider.notifier).state = v,
+                                        onChanged: (v) =>
+                                            ref
+                                                    .read(
+                                                      darkModeProvider.notifier,
+                                                    )
+                                                    .state =
+                                                v,
                                       );
                                     },
                                   ),
                                 ),
-                                SettingItem(icon: Iconsax.notification, label: 'Thông báo'),
-                                SettingItem(icon: Iconsax.language_circle, label: 'Ngôn ngữ: VI'),
+                                SettingItem(
+                                  icon: Iconsax.notification,
+                                  label: 'Thông báo',
+                                ),
+                                SettingItem(
+                                  icon: Iconsax.language_circle,
+                                  label: 'Ngôn ngữ: VI',
+                                ),
                               ],
                             ),
                             SettingsGroup(
                               header: 'Hỗ trợ',
                               items: [
-                                SettingItem(icon: Iconsax.message_question, label: 'Trung tâm trợ giúp'),
-                                SettingItem(icon: Iconsax.document_text, label: 'Điều khoản & Chính sách'),
-                                SettingItem(icon: Iconsax.info_circle, label: 'Giới thiệu ứng dụng'),
+                                SettingItem(
+                                  icon: Iconsax.message_question,
+                                  label: 'Trung tâm trợ giúp',
+                                ),
+                                SettingItem(
+                                  icon: Iconsax.document_text,
+                                  label: 'Điều khoản & Chính sách',
+                                ),
+                                SettingItem(
+                                  icon: Iconsax.info_circle,
+                                  label: 'Giới thiệu ứng dụng',
+                                ),
                               ],
                             ),
                           ],
@@ -140,9 +194,13 @@ class ProfileScreen extends ConsumerWidget {
                               onTap: () => _logout(ref, context),
                               child: Container(
                                 width: double.infinity,
-                                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                  horizontal: 20,
+                                ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
@@ -152,7 +210,11 @@ class ProfileScreen extends ConsumerWidget {
                                             color: const Color(0xFFFFEBEE),
                                             shape: BoxShape.circle,
                                           ),
-                                          child: const Icon(Icons.logout, color: Colors.redAccent, size: 20),
+                                          child: const Icon(
+                                            Icons.logout,
+                                            color: Colors.redAccent,
+                                            size: 20,
+                                          ),
                                         ),
                                         const SizedBox(width: 14),
                                         Text(
@@ -165,14 +227,18 @@ class ProfileScreen extends ConsumerWidget {
                                         ),
                                       ],
                                     ),
-                                    const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.redAccent),
+                                    const Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 16,
+                                      color: Colors.redAccent,
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 15),
                       ],
                     ),
                   ),
@@ -193,7 +259,12 @@ class _ProfileHeader extends StatelessWidget {
   final String email;
   final String avatarUrl;
   final String? badgeLabel;
-  const _ProfileHeader({required this.name, required this.email, required this.avatarUrl, this.badgeLabel});
+  const _ProfileHeader({
+    required this.name,
+    required this.email,
+    required this.avatarUrl,
+    this.badgeLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +277,9 @@ class _ProfileHeader extends StatelessWidget {
               padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: const LinearGradient(colors: [Color(0xFF7868E6), Color(0xFF3927D6)]),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF7868E6), Color(0xFF3927D6)],
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(.15),
@@ -256,11 +329,20 @@ class _ProfileHeader extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 4),
-              Text(email, style: GoogleFonts.lato(color: Colors.white.withOpacity(.9), fontSize: 13)),
+              Text(
+                email,
+                style: GoogleFonts.lato(
+                  color: Colors.white.withOpacity(.9),
+                  fontSize: 13,
+                ),
+              ),
               if (badgeLabel != null) ...[
                 const SizedBox(height: 10),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(.15),
                     borderRadius: BorderRadius.circular(30),
@@ -271,7 +353,14 @@ class _ProfileHeader extends StatelessWidget {
                     children: [
                       const Icon(Iconsax.crown, size: 14, color: Colors.amber),
                       const SizedBox(width: 6),
-                      Text(badgeLabel!, style: GoogleFonts.lato(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
+                      Text(
+                        badgeLabel!,
+                        style: GoogleFonts.lato(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -288,7 +377,11 @@ class StatData {
   final IconData icon;
   final String label;
   final String value;
-  const StatData({required this.icon, required this.label, required this.value});
+  const StatData({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 }
 
 class _StatRow extends StatelessWidget {
@@ -335,8 +428,14 @@ class _SingleStat extends StatelessWidget {
           child: Icon(data.icon, size: 20, color: const Color(0xFF3927D6)),
         ),
         const SizedBox(height: 8),
-        Text(data.value, style: GoogleFonts.lato(fontWeight: FontWeight.w700, fontSize: 15)),
-        Text(data.label, style: GoogleFonts.lato(fontSize: 11, color: Colors.grey[600])),
+        Text(
+          data.value,
+          style: GoogleFonts.lato(fontWeight: FontWeight.w700, fontSize: 15),
+        ),
+        Text(
+          data.label,
+          style: GoogleFonts.lato(fontSize: 11, color: Colors.grey[600]),
+        ),
       ],
     );
   }
@@ -365,7 +464,10 @@ class _SectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: GoogleFonts.lato(fontSize: 16, fontWeight: FontWeight.w700)),
+          Text(
+            title,
+            style: GoogleFonts.lato(fontSize: 16, fontWeight: FontWeight.w700),
+          ),
           const SizedBox(height: 12),
           child,
         ],
@@ -398,9 +500,18 @@ class _ProgressSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Text(label, style: GoogleFonts.lato(fontSize: 13, color: Colors.grey[800])),
+              child: Text(
+                label,
+                style: GoogleFonts.lato(fontSize: 13, color: Colors.grey[800]),
+              ),
             ),
-            Text('${(percent * 100).round()}%', style: GoogleFonts.lato(fontWeight: FontWeight.w700, fontSize: 13)),
+            Text(
+              '${(percent * 100).round()}%',
+              style: GoogleFonts.lato(
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+              ),
+            ),
           ],
         ),
       ],
@@ -427,36 +538,44 @@ class _QuickActions extends StatelessWidget {
         separatorBuilder: (_, __) => const SizedBox(width: 14),
         itemBuilder: (context, index) {
           final a = actions[index];
-            return Container(
-              width: 92,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+          return Container(
+            width: 92,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEFF0FF),
+                    shape: BoxShape.circle,
                   ),
-                ],
-              ),
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEFF0FF),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(a.icon, size: 20, color: const Color(0xFF3927D6)),
+                  child: Icon(a.icon, size: 20, color: const Color(0xFF3927D6)),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  a.label,
+                  style: GoogleFonts.lato(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
                   ),
-                  const SizedBox(height: 8),
-                  Text(a.label, style: GoogleFonts.lato(fontSize: 11, fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis),
-                ],
-              ),
-            );
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          );
         },
       ),
     );
@@ -500,7 +619,15 @@ class _SettingsGroupWidget extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Text(group.header.toUpperCase(), style: GoogleFonts.lato(fontSize: 12, letterSpacing: 1, fontWeight: FontWeight.w700, color: Colors.grey[700])),
+            child: Text(
+              group.header.toUpperCase(),
+              style: GoogleFonts.lato(
+                fontSize: 12,
+                letterSpacing: 1,
+                fontWeight: FontWeight.w700,
+                color: Colors.grey[700],
+              ),
+            ),
           ),
           Container(
             decoration: BoxDecoration(
@@ -538,7 +665,9 @@ class _SettingTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: showDivider ? Border(bottom: BorderSide(color: Colors.grey.shade200, width: .9)) : null,
+        border: showDivider
+            ? Border(bottom: BorderSide(color: Colors.grey.shade200, width: .9))
+            : null,
       ),
       child: ListTile(
         leading: Container(
@@ -549,8 +678,13 @@ class _SettingTile extends StatelessWidget {
           ),
           child: Icon(item.icon, size: 20, color: const Color(0xFF3927D6)),
         ),
-        title: Text(item.label, style: GoogleFonts.lato(fontSize: 14, fontWeight: FontWeight.w600)),
-        trailing: item.trailing ?? const Icon(Icons.chevron_right, size: 20, color: Colors.black45),
+        title: Text(
+          item.label,
+          style: GoogleFonts.lato(fontSize: 14, fontWeight: FontWeight.w600),
+        ),
+        trailing:
+            item.trailing ??
+            const Icon(Icons.chevron_right, size: 20, color: Colors.black45),
         onTap: () {},
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       ),
@@ -576,7 +710,9 @@ class _DarkModeToggle extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           gradient: value
-              ? const LinearGradient(colors: [Color(0xFF5E4AE3), Color(0xFF3927D6)])
+              ? const LinearGradient(
+                  colors: [Color(0xFF5E4AE3), Color(0xFF3927D6)],
+                )
               : null,
           color: value ? null : const Color(0xFFE2E5EC),
           boxShadow: value

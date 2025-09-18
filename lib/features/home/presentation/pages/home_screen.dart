@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:my_app/app/router.dart';
 import 'package:my_app/widgets/course_list.dart';
 import 'package:my_app/widgets/event_card.dart';
 import 'package:my_app/features/home/presentation/widgets/banner/components/top_bar.dart';
@@ -148,10 +150,19 @@ class _HomeScreenState extends State<HomeScreen>
             onSecondary: () {},
           ),
           SliverToBoxAdapter(child: AppSpacing.h12),
-          const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: SectionHeader(
               title: 'Khoá học của tôi',
               actionLabel: 'Xem tất cả',
+              onTap: () {
+                // Navigate to My Courses screen
+                // Using context.go to keep shell navigation
+                // Route constant added in router
+                if (mounted) {
+                  // ignore: use_build_context_synchronously
+                  context.go(AppRoutes.learning);
+                }
+              },
             ),
           ),
           SliverToBoxAdapter(child: AppSpacing.h12),
