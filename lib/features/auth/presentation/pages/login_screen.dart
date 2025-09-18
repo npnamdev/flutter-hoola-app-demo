@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../app/router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_app/core/constants/app_svg_icons.dart';
+import 'package:my_app/core/constants/app_shadows.dart';
 import '../../providers/auth_providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -95,13 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x1A000000),
-                        blurRadius: 14,
-                        offset: Offset(0, 6),
-                      ),
-                    ],
+                    boxShadow: AppShadows.popover,
                   ),
                   child: const Center(
                     child: Icon(Icons.flutter_dash, color: Colors.white, size: 46),
@@ -131,39 +126,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x14000000),
-                        blurRadius: 12,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: AppShadows.card,
                     border: Border.all(color: Colors.grey.shade100),
                   ),
-                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 28),
+                  padding: const EdgeInsets.fromLTRB(22, 26, 22, 30),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                      TextFormField(
+                      _ModernField(
                         controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: _lightInput('Email'),
+                        label: 'Email',
+                        textInputType: TextInputType.emailAddress,
                         validator: (v) => (v == null || v.isEmpty) ? 'Vui lòng nhập email' : null,
+                        prefixIcon: Icons.mail_rounded,
                       ),
-                      const SizedBox(height: 16),
-                      TextFormField(
+                      const SizedBox(height: 18),
+                      _ModernField(
                         controller: _passwordController,
-                        obscureText: _obscure,
-                        decoration: _lightInput('Mật khẩu').copyWith(
-                          suffixIcon: IconButton(
-                            icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
-                            onPressed: () => setState(() => _obscure = !_obscure),
-                          ),
-                        ),
+                        label: 'Mật khẩu',
+                        isPassword: true,
+                        obscure: _obscure,
+                        onToggleObscure: () => setState(() => _obscure = !_obscure),
                         validator: (v) => (v == null || v.isEmpty) ? 'Vui lòng nhập mật khẩu' : null,
+                        prefixIcon: Icons.lock_rounded,
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -176,29 +164,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF3927D6),
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          onPressed: (isLoading || _googleLoading) ? null : _submit,
-                          child: isLoading
-                              ? const SizedBox(
-                                  width: 22,
-                                  height: 22,
-                                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                )
-                              : const Text(
-                                  'Đăng nhập',
-                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-                                ),
-                        ),
+                      _PrimaryGradientButton(
+                        onPressed: (isLoading || _googleLoading) ? null : _submit,
+                        loading: isLoading,
+                        label: 'Đăng nhập',
                       ),
                       const SizedBox(height: 20),
                       Row(
@@ -212,30 +181,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ],
                       ),
                       const SizedBox(height: 18),
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          ),
-                          onPressed: (isLoading || _googleLoading) ? null : _loginWithGoogle,
-                          icon: _googleLoading
-                              ? const SizedBox(
-                                  width: 18,
-                                  height: 18,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
-                                )
-                              : SvgPicture.string(
-                                  AppSvgIcons.google,
-                                  width: 20,
-                                  height: 20,
-                                ),
-                          label: Text(
-                            _googleLoading ? 'Đang xử lý...' : 'Tiếp tục với Google',
-                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14.5),
-                          ),
-                        ),
+                      _GoogleOutlinedButton(
+                        onPressed: (isLoading || _googleLoading) ? null : _loginWithGoogle,
+                        loading: _googleLoading,
                       ),
                       ],
                     ),
@@ -258,28 +206,306 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   // Old glass & glow helpers removed for simplified UI
 
-  InputDecoration _lightInput(String label) {
-    return InputDecoration(
-      labelText: label,
-      floatingLabelBehavior: FloatingLabelBehavior.auto,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.grey.shade300),
+}
+
+class _ModernField extends StatefulWidget {
+  final TextEditingController controller;
+  final String label;
+  final bool isPassword;
+  final bool? obscure; // controlled from parent if password
+  final VoidCallback? onToggleObscure;
+  final String? Function(String?)? validator;
+  final TextInputType? textInputType;
+  final IconData? prefixIcon;
+
+  const _ModernField({
+    required this.controller,
+    required this.label,
+    this.isPassword = false,
+    this.obscure,
+    this.onToggleObscure,
+    this.validator,
+    this.textInputType,
+    this.prefixIcon,
+  });
+
+  @override
+  State<_ModernField> createState() => _ModernFieldState();
+}
+
+class _ModernFieldState extends State<_ModernField> {
+  late FocusNode _focusNode;
+  bool _hovering = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _focusNode.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final focused = _focusNode.hasFocus;
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOut,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18),
+        color: focused ? const Color(0xFF3927D6).withOpacity(.06) : const Color(0xFFF5F7FA),
+        boxShadow: focused
+            ? AppShadows.subtle
+            : (_hovering ? AppShadows.subtle : const []),
+        border: Border.all(
+          color: focused ? const Color(0xFF3927D6) : Colors.transparent,
+          width: 1.1,
+        ),
       ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF3927D6), width: 1.4),
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovering = true),
+        onExit: (_) => setState(() => _hovering = false),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Row(
+            children: [
+              if (widget.prefixIcon != null)
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 8),
+                  child: Icon(widget.prefixIcon, size: 20, color: focused ? const Color(0xFF3927D6) : Colors.grey[600]),
+                ),
+              Expanded(
+                child: TextFormField(
+                  focusNode: _focusNode,
+                  controller: widget.controller,
+                  keyboardType: widget.textInputType,
+                  obscureText: widget.isPassword ? (widget.obscure ?? true) : false,
+                  validator: widget.validator,
+                  decoration: InputDecoration(
+                    labelText: widget.label,
+                    labelStyle: TextStyle(
+                      fontSize: 14,
+                      color: focused ? const Color(0xFF3927D6) : Colors.grey[600],
+                    ),
+                    floatingLabelStyle: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF3927D6),
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
+                  ),
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                ),
+              ),
+              if (widget.isPassword)
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: IconButton(
+                    splashRadius: 20,
+                    icon: Icon(
+                      (widget.obscure ?? true) ? Icons.visibility : Icons.visibility_off,
+                      size: 20,
+                      color: focused ? const Color(0xFF3927D6) : Colors.grey[600],
+                    ),
+                    onPressed: widget.onToggleObscure,
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Colors.redAccent),
+    );
+  }
+}
+
+class _PrimaryGradientButton extends StatefulWidget {
+  final VoidCallback? onPressed;
+  final bool loading;
+  final String label;
+  const _PrimaryGradientButton({required this.onPressed, required this.loading, required this.label});
+
+  @override
+  State<_PrimaryGradientButton> createState() => _PrimaryGradientButtonState();
+}
+
+class _PrimaryGradientButtonState extends State<_PrimaryGradientButton> {
+  bool _hover = false;
+  bool _pressed = false;
+  @override
+  Widget build(BuildContext context) {
+    final disabled = widget.onPressed == null;
+    final gradient = LinearGradient(
+      colors: disabled
+          ? [const Color(0xFFB9BEEA), const Color(0xFFA6ACDF)]
+          : [const Color(0xFF3927D6), const Color(0xFF5E4FF3)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    );
+    return AnimatedScale(
+      scale: _pressed ? 0.97 : 1,
+      duration: const Duration(milliseconds: 120),
+      curve: Curves.easeOut,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hover = true),
+        onExit: (_) => setState(() => _hover = false),
+        child: GestureDetector(
+          onTapDown: disabled ? null : (_) => setState(() => _pressed = true),
+          onTapCancel: () => setState(() => _pressed = false),
+          onTapUp: (_) => setState(() => _pressed = false),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeOut,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: gradient,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: disabled
+                  ? []
+                  : (_hover
+                      ? [
+                          const BoxShadow(
+                            color: Color(0x26000000),
+                            blurRadius: 18,
+                            offset: Offset(0, 6),
+                          )
+                        ]
+                      : const [
+                          BoxShadow(
+                            color: Color(0x1F000000),
+                            blurRadius: 14,
+                            offset: Offset(0, 6),
+                          )
+                        ]),
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: disabled ? null : widget.onPressed,
+                borderRadius: BorderRadius.circular(16),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Center(
+                    child: widget.loading
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          )
+                        : Text(
+                            widget.label,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              letterSpacing: .3,
+                              color: Colors.white,
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Colors.redAccent, width: 1.4),
+    );
+  }
+}
+
+class _GoogleOutlinedButton extends StatefulWidget {
+  final VoidCallback? onPressed;
+  final bool loading;
+  const _GoogleOutlinedButton({required this.onPressed, required this.loading});
+
+  @override
+  State<_GoogleOutlinedButton> createState() => _GoogleOutlinedButtonState();
+}
+
+class _GoogleOutlinedButtonState extends State<_GoogleOutlinedButton> {
+  bool _hover = false;
+  bool _pressed = false;
+  @override
+  Widget build(BuildContext context) {
+    final disabled = widget.onPressed == null;
+    return AnimatedScale(
+      scale: _pressed ? 0.975 : 1,
+      duration: const Duration(milliseconds: 120),
+      curve: Curves.easeOut,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hover = true),
+        onExit: (_) => setState(() => _hover = false),
+        child: GestureDetector(
+          onTapDown: disabled ? null : (_) => setState(() => _pressed = true),
+            onTapCancel: () => setState(() => _pressed = false),
+            onTapUp: (_) => setState(() => _pressed = false),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: disabled ? const Color(0xFFF3F4F7) : Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: disabled
+                    ? const Color(0xFFE0E3E9)
+                    : (_hover ? const Color(0xFF8E95A3) : const Color(0xFFD5DAE1)),
+              ),
+              boxShadow: disabled
+                  ? []
+                  : (_hover
+                      ? [
+                          const BoxShadow(
+                              color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4))
+                        ]
+                      : AppShadows.subtle),
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: disabled ? null : widget.onPressed,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 14),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (widget.loading)
+                        const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      else ...[
+                        SvgPicture.string(
+                          AppSvgIcons.google,
+                          width: 20,
+                          height: 20,
+                        ),
+                        const SizedBox(width: 10),
+                      ],
+                      Flexible(
+                        child: Text(
+                          widget.loading ? 'Đang xử lý...' : 'Tiếp tục với Google',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.5,
+                            letterSpacing: .2,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     );
   }
 }

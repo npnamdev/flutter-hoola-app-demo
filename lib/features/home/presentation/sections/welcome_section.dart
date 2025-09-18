@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/core/constants/app_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class WelcomeSection extends StatelessWidget {
   final String title; // e.g. 'Chào mừng quay trở lại'
@@ -165,35 +166,47 @@ class _OutlinedTransButton extends StatelessWidget {
 
 class _WelcomeIllustration extends StatelessWidget {
   const _WelcomeIllustration();
+  static const String _robotUrl = 'https://res.cloudinary.com/dpufemrnq/image/upload/v1758179126/demo/1.svg.svg';
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 70,
-      height: 70,
+      width: 90,
+      height: 90,
       child: Stack(
         alignment: Alignment.center,
         children: [
           Container(
-            width: 70,
-            height: 70,
+            width: 90,
+            height: 90,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white.withOpacity(.15),
+              color: Colors.white.withOpacity(.12),
             ),
           ),
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white30, width: 2),
+            Container(
+              width: 75,
+              height: 75,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white30, width: 2),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: SvgPicture.network(
+                _robotUrl,
+                fit: BoxFit.contain,
+                placeholderBuilder: (_) => const Center(
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white70),
+                  ),
+                ),
+              ),
             ),
-            child: const Center(
-              child: Text('👋', style: TextStyle(fontSize: 24)),
-            ),
-          ),
         ],
       ),
     );
   }
 }
+
+

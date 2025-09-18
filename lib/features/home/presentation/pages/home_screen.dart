@@ -147,21 +147,6 @@ class _HomeScreenState extends State<HomeScreen>
             onPrimary: () {},
             onSecondary: () {},
           ),
-          // ContinueLearningSection(
-          //   items: mockContinue,
-          //   onTapItem: (c) {},
-          //   onSeeAll: () {},
-          // ),
-          // RecommendationsSection(
-          //   items: mockRecommendations,
-          //   onTapItem: (r) {},
-          //   onSeeAll: () {},
-          // ),
-          // QuickQuizSection(
-          //   meta: mockQuickQuiz,
-          //   onStart: () {},
-          //   onReview: () {},
-          // ),
           SliverToBoxAdapter(child: AppSpacing.h12),
           const SliverToBoxAdapter(
             child: SectionHeader(
@@ -171,6 +156,13 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           SliverToBoxAdapter(child: AppSpacing.h12),
           const SliverToBoxAdapter(child: CourseList()),
+          SliverToBoxAdapter(child: AppSpacing.h16),
+          const SliverToBoxAdapter(
+            child: SectionHeader(title: 'Sự kiện sắp diễn ra'),
+          ),
+          SliverToBoxAdapter(child: AppSpacing.h8),
+          const SliverToBoxAdapter(child: EventCardList()),
+          SliverToBoxAdapter(child: AppSpacing.h16),
           SliverToBoxAdapter(child: AppSpacing.h16),
           const SliverToBoxAdapter(
             child: SectionHeader(title: 'Sự kiện sắp diễn ra'),
