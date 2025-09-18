@@ -4,18 +4,21 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app/app/router.dart';
+import 'package:my_app/features/auth/providers/auth_providers.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  bool _navigated = false;
 
   @override
   void initState() {
@@ -26,10 +29,27 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(seconds: 8),
     )..repeat(reverse: true);
 
-    Future.delayed(const Duration(seconds: 3), () {
-      if (!mounted) return;
+    // Start auth check as soon as possible (with a minimal splash display time)
+    _kickoffAuthRedirect();
+  }
+
+  Future<void> _kickoffAuthRedirect() async {
+    // Ensure splash visible at least 1200ms for UX
+    final minDisplay = Future.delayed(const Duration(milliseconds: 1200));
+    bool loggedIn = false;
+    try {
+      loggedIn = await ref.read(authStatusProvider.future);
+    } catch (_) {
+      loggedIn = false; // On error treat as logged out
+    }
+    await minDisplay;
+    if (!mounted || _navigated) return;
+    _navigated = true;
+    if (loggedIn) {
       context.go(AppRoutes.homeShell);
-    });
+    } else {
+      context.go(AppRoutes.login);
+    }
   }
 
   @override

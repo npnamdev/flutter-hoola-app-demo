@@ -7,11 +7,13 @@ import 'package:my_app/features/schedule/presentation/pages/schedule_screen.dart
 import 'package:my_app/features/notification/presentation/pages/notification_screen.dart';
 import 'package:my_app/features/profile/presentation/pages/profile_screen.dart';
 import 'package:my_app/features/splash/splash_screen.dart';
+import 'package:my_app/features/auth/presentation/pages/login_screen.dart';
 
 // Route names constants
 class AppRoutes {
   static const splash = '/';
   static const homeShell = '/home';
+  static const login = '/login';
   static const schedule = '/schedule';
   static const learning = '/learning';
   static const notification = '/notification';
@@ -29,7 +31,18 @@ GoRouter createRouter() {
       GoRoute(
         path: AppRoutes.splash,
         name: 'splash',
-        builder: (context, state) => const SplashScreen(),
+        pageBuilder: (context, state) => _buildFadePage(
+          key: state.pageKey,
+          child: const SplashScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.login,
+        name: 'login',
+        pageBuilder: (context, state) => _buildFadePage(
+          key: state.pageKey,
+          child: const LoginScreen(),
+        ),
       ),
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
@@ -38,30 +51,61 @@ GoRouter createRouter() {
           GoRoute(
             path: AppRoutes.homeShell,
             name: 'home',
-            builder: (context, state) => const HomeScreen(),
+            pageBuilder: (context, state) => _buildFadePage(
+              key: state.pageKey,
+              child: const HomeScreen(),
+            ),
           ),
           GoRoute(
             path: AppRoutes.schedule,
             name: 'schedule',
-            builder: (context, state) => const ScheduleScreen(),
+            pageBuilder: (context, state) => _buildFadePage(
+              key: state.pageKey,
+              child: const ScheduleScreen(),
+            ),
           ),
-            GoRoute(
+          GoRoute(
             path: AppRoutes.learning,
             name: 'learning',
-            builder: (context, state) => const LearningScreen(),
+            pageBuilder: (context, state) => _buildFadePage(
+              key: state.pageKey,
+              child: const LearningScreen(),
+            ),
           ),
           GoRoute(
             path: AppRoutes.notification,
             name: 'notification',
-            builder: (context, state) => const NotificationScreen(),
+            pageBuilder: (context, state) => _buildFadePage(
+              key: state.pageKey,
+              child: const NotificationScreen(),
+            ),
           ),
           GoRoute(
             path: AppRoutes.profile,
             name: 'profile',
-            builder: (context, state) => const ProfileScreen(),
+            pageBuilder: (context, state) => _buildFadePage(
+              key: state.pageKey,
+              child: const ProfileScreen(),
+            ),
           ),
         ],
       ),
     ],
+  );
+}
+
+// Helper to build a fade transition page (no horizontal slide)
+CustomTransitionPage _buildFadePage({required LocalKey key, required Widget child}) {
+  return CustomTransitionPage(
+    key: key,
+    transitionDuration: const Duration(milliseconds: 200),
+    reverseTransitionDuration: const Duration(milliseconds: 200),
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(
+        opacity: CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+        child: child,
+      );
+    },
   );
 }

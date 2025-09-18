@@ -51,7 +51,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   @override
   Widget build(BuildContext context) {
-  final location = _currentLocation(context);
+    final location = _currentLocation(context);
     final currentIndex = _currentIndexFromLocation(location);
     return Scaffold(
       body: widget.child,
@@ -67,6 +67,12 @@ class _NavigationMenuState extends State<NavigationMenu> {
         child: NavigationBar(
           height: 80,
           elevation: 0,
+          indicatorColor: Colors.transparent,
+          overlayColor: MaterialStateProperty.resolveWith<Color?>((
+            Set<MaterialState> states,
+          ) {
+            return Colors.transparent;
+          }),
           selectedIndex: currentIndex,
           onDestinationSelected: (index) => _onTap(index, context),
           destinations: const [
@@ -87,7 +93,10 @@ class _NavigationMenuState extends State<NavigationMenu> {
             ),
             NavigationDestination(
               icon: Icon(Iconsax.notification_bing, color: AppColors.neutral),
-              selectedIcon: Icon(Iconsax.notification_bing, color: AppColors.primary),
+              selectedIcon: Icon(
+                Iconsax.notification_bing,
+                color: AppColors.primary,
+              ),
               label: 'Thông báo',
             ),
             NavigationDestination(
