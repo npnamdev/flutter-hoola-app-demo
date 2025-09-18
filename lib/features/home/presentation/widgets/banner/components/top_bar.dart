@@ -11,6 +11,7 @@ class TopBar extends StatelessWidget {
   final VoidCallback? onSearch;
   final bool showSearchIcon;
   final bool lightMode;
+  final bool showProfile; // new
   const TopBar({
     super.key,
     required this.userName,
@@ -20,6 +21,7 @@ class TopBar extends StatelessWidget {
     this.onSearch,
     this.showSearchIcon = false,
     this.lightMode = true,
+    this.showProfile = true,
   });
 
   @override
@@ -29,65 +31,70 @@ class TopBar extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-            height: kTopBarHeight,
-            child: Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(radius: 25, backgroundImage: NetworkImage(avatarUrl)),
-                  Positioned(
-                    right: 2,
-                    bottom: 2,
-                    child: Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: Colors.greenAccent,
-                        border: Border.all(color: Colors.white, width: 2),
-                        shape: BoxShape.circle,
+          if (showProfile) ...[
+            SizedBox(
+              height: kTopBarHeight,
+              child: Center(
+                child: Stack(
+                  children: [
+                    CircleAvatar(radius: 25, backgroundImage: NetworkImage(avatarUrl)),
+                    Positioned(
+                      right: 2,
+                      bottom: 2,
+                      child: Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: Colors.greenAccent,
+                          border: Border.all(color: Colors.white, width: 2),
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: SizedBox(
-              height: kTopBarHeight,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2), // optical tweak
-                    child: Text(
-                      'Chào mừng trở lại,',
+            const SizedBox(width: 14),
+            Expanded(
+              child: SizedBox(
+                height: kTopBarHeight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2), // optical tweak
+                      child: Text(
+                        'Chào mừng trở lại,',
+                        style: GoogleFonts.lato(
+                          color: lightMode ? Colors.grey[600] : Colors.white70,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          height: 1.05,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 7),
+                    Text(
+                      userName,
+                      overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.lato(
-                        color: lightMode ? Colors.grey[600] : Colors.white70,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                        color: lightMode ? Colors.black87 : Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        letterSpacing: .3,
                         height: 1.05,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 7),
-                  Text(
-                    userName,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.lato(
-                      color: lightMode ? Colors.black87 : Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      letterSpacing: .3,
-                      height: 1.05,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
+          ] else ...[
+            // When profile hidden, push icons to left spacing
+            Expanded(child: Container()),
+          ],
           SizedBox(
             height: kTopBarHeight,
             child: Row(

@@ -8,6 +8,7 @@ import 'package:my_app/features/notification/presentation/pages/notification_scr
 import 'package:my_app/features/profile/presentation/pages/profile_screen.dart';
 import 'package:my_app/features/splash/splash_screen.dart';
 import 'package:my_app/features/auth/presentation/pages/login_screen.dart';
+import 'package:my_app/features/search/presentation/pages/search_screen.dart';
 
 // Route names constants
 class AppRoutes {
@@ -18,6 +19,7 @@ class AppRoutes {
   static const learning = '/learning';
   static const notification = '/notification';
   static const profile = '/profile';
+  static const search = '/search';
 }
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -86,6 +88,14 @@ GoRouter createRouter() {
             pageBuilder: (context, state) => _buildFadePage(
               key: state.pageKey,
               child: const ProfileScreen(),
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.search,
+            name: 'search',
+            pageBuilder: (context, state) => _buildFadePage(
+              key: state.pageKey,
+              child: const SearchScreen(),
             ),
           ),
         ],

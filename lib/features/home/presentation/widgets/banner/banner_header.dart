@@ -66,6 +66,7 @@ class _BannerHeaderState extends State<BannerHeader> {
                     onSearch: () {},
                     showSearchIcon: true,
                     lightMode: widget.lightMode,
+                    showProfile: false,
                   ),
                   const SizedBox(height: 8),
                   if (widget.showStats && widget.totalCourses != null)
