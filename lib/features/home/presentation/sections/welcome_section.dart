@@ -168,8 +168,8 @@ class _WelcomeIllustration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 85,
-      height: 85,
+      width: 70,
+      height: 70,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -189,10 +189,7 @@ class _WelcomeIllustration extends StatelessWidget {
               border: Border.all(color: Colors.white30, width: 2),
             ),
             child: const Center(
-              child: Text(
-                '👋',
-                style: TextStyle(fontSize: 24),
-              ),
+              child: Text('👋', style: TextStyle(fontSize: 24)),
             ),
           ),
         ],

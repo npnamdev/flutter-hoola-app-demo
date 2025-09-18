@@ -58,115 +58,202 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     super.dispose();
   }
 
-  Widget _blurOrb(double size, Color color, double dx, double dy) {
+  // Animated radial soft blobs for subtle movement
+  Widget _animatedBlob({
+    required double size,
+    required Color color,
+    required Offset origin,
+    double travel = 28,
+  }) {
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
         final t = _controller.value * 2 * pi;
+        final dx = origin.dx + cos(t) * travel;
+        final dy = origin.dy + sin(t) * travel;
         return Positioned(
-          left: dx + cos(t) * 20,
-            top: dy + sin(t) * 20,
-            child: Container(
-              width: size,
-              height: size,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-                child: Container(color: Colors.transparent),
+          left: dx,
+          top: dy,
+          child: Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [color, Colors.transparent],
+                stops: const [0, 1],
               ),
-            ));
+            ),
+          ),
+        );
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final anim = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Gradient nền
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFF3927D6), Color(0xFF5E4FF3)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
+          // Animated sweeping gradient background
+          AnimatedBuilder(
+            animation: anim,
+            builder: (context, _) {
+              final shift = (anim.value * 0.4) - 0.2; // -0.2 .. 0.2
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: const [
+                      Color(0xFF21177D),
+                      Color(0xFF3927D6),
+                      Color(0xFF5E4FF3),
+                    ],
+                    begin: Alignment(-1 + shift, -1),
+                    end: Alignment(1 - shift, 1),
+                  ),
+                ),
+              );
+            },
           ),
 
-          // Orbs động
-          _blurOrb(180, Colors.white.withOpacity(0.15), 40, 100),
-          _blurOrb(140, Colors.pinkAccent.withOpacity(0.15), 220, 400),
-          _blurOrb(120, Colors.blueAccent.withOpacity(0.15), 100, 600),
+          // Subtle animated blobs
+          _animatedBlob(
+            size: 220,
+            color: Colors.white.withOpacity(.10),
+            origin: const Offset(40, 140),
+            travel: 22,
+          ),
+          _animatedBlob(
+            size: 160,
+            color: Colors.pinkAccent.withOpacity(.15),
+            origin: const Offset(250, 480),
+            travel: 26,
+          ),
+          _animatedBlob(
+            size: 190,
+            color: Colors.blueAccent.withOpacity(.12),
+            origin: const Offset(90, 620),
+            travel: 24,
+          ),
 
-          // Glass Box ở giữa
+          // Center content
           Center(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                child: Container(
-                  width: 280,
-                  height: 300,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 120,
+                  height: 120,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(30),
+                    shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.25),
-                      width: 1.5,
+                      color: Colors.white.withOpacity(.25),
+                      width: 1.4,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.deepPurpleAccent.withOpacity(0.3),
-                        blurRadius: 20,
-                        spreadRadius: 5,
-                      ),
-                    ],
+                    gradient: RadialGradient(
+                      colors: [
+                        Colors.white.withOpacity(.25),
+                        Colors.white.withOpacity(0),
+                      ],
+                      stops: const [0, 1],
+                    ),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.flutter_dash, // thay logo app ở đây
-                        size: 90,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(height: 18),
-                      Text(
-                        'Hoola',
-                        style: GoogleFonts.lato(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: 1.5,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black26,
-                              blurRadius: 8,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Học tập dễ dàng hơn mỗi ngày',
-                        style: GoogleFonts.lato(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white70,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                  child: const Center(
+                    child: Icon(
+                      Icons.flutter_dash,
+                      size: 70,
+                      color: Colors.white,
+                    ),
                   ),
+                ),
+                const SizedBox(height: 26),
+                Text(
+                  'Hoola',
+                  style: GoogleFonts.lato(
+                    fontSize: 40,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                    letterSpacing: 2,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Học tập dễ dàng hơn mỗi ngày',
+                  style: GoogleFonts.lato(
+                    fontSize: 15,
+                    color: Colors.white70,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 38),
+                _ProgressBar(animation: anim),
+              ],
+            ),
+          ),
+          // Bottom small tagline / version (optional placeholder)
+          Positioned(
+            bottom: 26,
+            left: 0,
+            right: 0,
+            child: Opacity(
+              opacity: .75,
+              child: Text(
+                'Đang chuẩn bị trải nghiệm của bạn...',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.lato(
+                  fontSize: 12,
+                  color: Colors.white70,
+                  letterSpacing: .5,
                 ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ProgressBar extends StatelessWidget {
+  final Animation<double> animation;
+  const _ProgressBar({required this.animation});
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, _) {
+        final v = (sin(animation.value * 2 * pi) + 1) / 2; // 0..1 oscillation
+        return Container(
+          width: 180,
+          height: 6,
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(.18),
+            borderRadius: BorderRadius.circular(40),
+          ),
+          alignment: Alignment.centerLeft,
+          child: FractionallySizedBox(
+            widthFactor: .2 + v * .8,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFFFFFFF), Color(0xFFDDD9FF)],
+                ),
+                borderRadius: BorderRadius.circular(40),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white.withOpacity(.5),
+                    blurRadius: 8,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

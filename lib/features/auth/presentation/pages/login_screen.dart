@@ -78,30 +78,56 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 430),
+            constraints: const BoxConstraints(maxWidth: 420),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Hoola',
-                  style: GoogleFonts.lato(
-                    fontSize: 42,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF3927D6),
-                    letterSpacing: 1.2,
+                Container(
+                  width: 86,
+                  height: 86,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF3927D6), Color(0xFF5E4FF3)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x1A000000),
+                        blurRadius: 14,
+                        offset: Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: const Center(
+                    child: Icon(Icons.flutter_dash, color: Colors.white, size: 46),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 22),
+                Text(
+                  'Hoola',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.lato(
+                    fontSize: 40,
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF3927D6),
+                    letterSpacing: 1.3,
+                  ),
+                ),
+                const SizedBox(height: 8),
                 Text(
                   'Đăng nhập tài khoản của bạn',
+                  textAlign: TextAlign.center,
                   style: GoogleFonts.lato(
                     fontSize: 16,
                     color: Colors.grey[700],
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 34),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -119,6 +145,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: Form(
                     key: _formKey,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                       TextFormField(
                         controller: _emailController,
@@ -139,12 +166,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         validator: (v) => (v == null || v.isEmpty) ? 'Vui lòng nhập mật khẩu' : null,
                       ),
                       const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: isLoading ? null : () {},
-                          child: const Text('Quên mật khẩu?'),
-                        ),
+                      Row(
+                        children: [
+                          const Spacer(),
+                          TextButton(
+                            onPressed: isLoading ? null : () {},
+                            child: const Text('Quên mật khẩu?'),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 8),
                       SizedBox(
@@ -176,7 +205,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         children: [
                           Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
                           const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            padding: EdgeInsets.symmetric(horizontal: 12),
                             child: Text('Hoặc', style: TextStyle(fontSize: 12, letterSpacing: .5)),
                           ),
                           Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
@@ -212,13 +241,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 40),
-                Center(
-                  child: Text(
-                    'Bằng việc tiếp tục bạn đồng ý với Điều khoản & Chính sách',
-                    style: TextStyle(color: Colors.grey[500], fontSize: 11),
-                    textAlign: TextAlign.center,
-                  ),
+                const SizedBox(height: 42),
+                Text(
+                  'Bằng việc tiếp tục bạn đồng ý với Điều khoản & Chính sách',
+                  style: TextStyle(color: Colors.grey[500], fontSize: 11),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),

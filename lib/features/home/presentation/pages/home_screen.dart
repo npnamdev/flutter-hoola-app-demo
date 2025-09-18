@@ -140,8 +140,8 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           SliverToBoxAdapter(child: AppSpacing.h8),
           WelcomeSection(
-            title: 'Chào mừng quay trở lại',
-            subtitle: 'Giữ streak hôm nay  chuỗi tiến độ!',
+            title: 'Chào mừng trở lại, Nam!',
+            subtitle: 'Bạn đã hoàn thành 80% mục tiêu tuần này',
             primaryLabel: 'Tiếp tục học',
             secondaryLabel: 'Xem thống kê',
             onPrimary: () {},
