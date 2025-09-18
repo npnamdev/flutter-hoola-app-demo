@@ -12,6 +12,8 @@ class ProfileScreen extends ConsumerWidget {
   Future<void> _logout(WidgetRef ref, BuildContext context) async {
     final repo = ref.read(authRepositoryProvider);
     await repo.logout();
+    // Invalidate cached auth status so future checks re-read preferences
+    ref.invalidate(authStatusProvider);
     if (context.mounted) {
       context.go(AppRoutes.login);
     }

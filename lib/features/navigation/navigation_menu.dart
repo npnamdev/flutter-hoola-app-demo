@@ -75,7 +75,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
           ),
         ),
         child: NavigationBar(
-          height: 76,
+          height: 70,
           elevation: 0,
           indicatorColor: Colors.transparent,
           overlayColor: MaterialStateProperty.all(Colors.transparent),

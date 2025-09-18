@@ -38,6 +38,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final state = ref.read(loginControllerProvider);
     state.when(
       data: (_) {
+        // Refresh auth status cache so if user somehow returns to splash same session it sees logged-in
+        ref.invalidate(authStatusProvider);
         if (!mounted) return;
         context.go(AppRoutes.homeShell);
       },
@@ -58,6 +60,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final state = ref.read(loginControllerProvider);
     state.when(
       data: (_) {
+        ref.invalidate(authStatusProvider);
         if (!mounted) return;
         context.go(AppRoutes.homeShell);
       },
