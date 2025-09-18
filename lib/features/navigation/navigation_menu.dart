@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_app/core/constants/app_colors.dart';
 import 'package:my_app/app/router.dart';
+import 'package:my_app/core/constants/app_svg_icons.dart';
 
 class NavigationMenu extends StatefulWidget {
   final Widget child;
@@ -68,40 +68,73 @@ class _NavigationMenuState extends State<NavigationMenu> {
           height: 80,
           elevation: 0,
           indicatorColor: Colors.transparent,
-          overlayColor: MaterialStateProperty.resolveWith<Color?>((
-            Set<MaterialState> states,
-          ) {
-            return Colors.transparent;
-          }),
+          overlayColor: MaterialStateProperty.all(Colors.transparent),
           selectedIndex: currentIndex,
           onDestinationSelected: (index) => _onTap(index, context),
-          destinations: const [
+          destinations: [
             NavigationDestination(
-              icon: Icon(Iconsax.home_2, color: AppColors.neutral),
-              selectedIcon: Icon(Iconsax.home_2, color: AppColors.primary),
+              icon: SvgIcon(
+                AppSvgIcons.home,
+                color: AppColors.neutral,
+                size: 24,
+              ),
+              selectedIcon: SvgIcon(
+                AppSvgIcons.home,
+                color: AppColors.primary,
+                size: 24,
+              ),
               label: 'Trang chủ',
             ),
             NavigationDestination(
-              icon: Icon(Iconsax.calendar_2, color: AppColors.neutral),
-              selectedIcon: Icon(Iconsax.calendar_2, color: AppColors.primary),
+              icon: SvgIcon(
+                AppSvgIcons.calendar,
+                color: AppColors.neutral,
+                size: 24,
+              ),
+              selectedIcon: SvgIcon(
+                AppSvgIcons.calendar,
+                color: AppColors.primary,
+                size: 24,
+              ),
               label: 'Lịch học',
             ),
             NavigationDestination(
-              icon: Icon(Iconsax.book_saved, color: AppColors.neutral),
-              selectedIcon: Icon(Iconsax.book_saved, color: AppColors.primary),
+              icon: SvgIcon(
+                AppSvgIcons.book,
+                color: AppColors.neutral,
+                size: 24,
+              ),
+              selectedIcon: SvgIcon(
+                AppSvgIcons.book,
+                color: AppColors.primary,
+                size: 24,
+              ),
               label: 'Học tập',
             ),
             NavigationDestination(
-              icon: Icon(Iconsax.notification_bing, color: AppColors.neutral),
-              selectedIcon: Icon(
-                Iconsax.notification_bing,
+              icon: SvgIcon(
+                AppSvgIcons.bell,
+                color: AppColors.neutral,
+                size: 24,
+              ),
+              selectedIcon: SvgIcon(
+                AppSvgIcons.bell,
                 color: AppColors.primary,
+                size: 24,
               ),
               label: 'Thông báo',
             ),
             NavigationDestination(
-              icon: Icon(Iconsax.user, color: AppColors.neutral),
-              selectedIcon: Icon(Iconsax.user, color: AppColors.primary),
+              icon: SvgIcon(
+                AppSvgIcons.user,
+                color: AppColors.neutral,
+                size: 24,
+              ),
+              selectedIcon: SvgIcon(
+                AppSvgIcons.user,
+                color: AppColors.primary,
+                size: 24,
+              ),
               label: 'Tài khoản',
             ),
           ],

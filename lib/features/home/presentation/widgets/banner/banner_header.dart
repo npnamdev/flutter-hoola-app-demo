@@ -63,6 +63,8 @@ class _BannerHeaderState extends State<BannerHeader> {
                     userName: widget.userName,
                     onNotification: widget.onNotification,
                     onSettings: widget.onSettings,
+                    onSearch: () {},
+                    showSearchIcon: true,
                     lightMode: widget.lightMode,
                   ),
                   const SizedBox(height: 8),
