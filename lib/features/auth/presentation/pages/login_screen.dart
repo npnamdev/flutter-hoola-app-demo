@@ -34,7 +34,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void _submit() async {
     if (!_formKey.currentState!.validate()) return;
     final loginState = ref.read(loginControllerProvider.notifier);
-    await loginState.login(_emailController.text.trim(), _passwordController.text);
+    await loginState.login(
+      _emailController.text.trim(),
+      _passwordController.text,
+    );
     final state = ref.read(loginControllerProvider);
     state.when(
       data: (_) {
@@ -45,9 +48,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       },
       loading: () {},
       error: (e, _) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
       },
     );
   }
@@ -66,9 +69,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       },
       loading: () {},
       error: (e, _) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
       },
     );
     if (mounted) setState(() => _googleLoading = false);
@@ -89,24 +92,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 86,
-                  height: 86,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF3927D6), Color(0xFF5E4FF3)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    boxShadow: AppShadows.popover,
-                  ),
-                  child: Center(
-                    child: SvgPicture.string(
-                      AppSvgIcons.home,
-                      width: 46,
-                      height: 46,
-                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                SizedBox(
+                  width: 120,
+                  height: 120,
+                  child: SvgPicture.network(
+                    'https://res.cloudinary.com/dpufemrnq/image/upload/v1758179129/demo/2.svg.svg',
+                    fit: BoxFit.contain,
+                    placeholderBuilder: (c) => const Center(
+                      child: SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
                     ),
                   ),
                 ),
@@ -114,23 +111,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Text(
                   'Hoola',
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.lato(
-                    fontSize: 40,
-                    fontWeight: FontWeight.w800,
+                  style: GoogleFonts.pacifico(
+                    fontSize: 54,
+                    fontWeight: FontWeight.w700,
                     color: const Color(0xFF3927D6),
-                    letterSpacing: 1.3,
+                    height: 1.0,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 20),
                 Text(
                   'Đăng nhập tài khoản của bạn',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.lato(
                     fontSize: 16,
-                    color: Colors.grey[700],
+                    color: Colors.grey[600],
                   ),
                 ),
-                const SizedBox(height: 34),
+                const SizedBox(height: 25),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -144,70 +141,112 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                      _ModernField(
-                        controller: _emailController,
-                        label: 'Email',
-                        textInputType: TextInputType.emailAddress,
-                        validator: (v) => (v == null || v.isEmpty) ? 'Vui lòng nhập email' : null,
-                        prefixSvg: SvgPicture.string(AppSvgIcons.username, width: 20, height: 20, colorFilter: const ColorFilter.mode(Color(0xFF3927D6), BlendMode.srcIn)),
-                        verticalPadding: 10,
-                      ),
-                      const SizedBox(height: 18),
-                      _ModernField(
-                        controller: _passwordController,
-                        label: 'Mật khẩu',
-                        isPassword: true,
-                        obscure: _obscure,
-                        onToggleObscure: () => setState(() => _obscure = !_obscure),
-                        validator: (v) => (v == null || v.isEmpty) ? 'Vui lòng nhập mật khẩu' : null,
-                        prefixSvg: SvgPicture.string(AppSvgIcons.lock, width: 20, height: 20, colorFilter: const ColorFilter.mode(Color(0xFF3927D6), BlendMode.srcIn)),
-                        suffixWidget: IconButton(
-                          splashRadius: 20,
-                          icon: SvgPicture.string(
-                            _obscure ? AppSvgIcons.eye : AppSvgIcons.eyeoff,
+                        _ModernField(
+                          controller: _emailController,
+                          label: 'Email',
+                          textInputType: TextInputType.emailAddress,
+                          validator: (v) => (v == null || v.isEmpty)
+                              ? 'Vui lòng nhập email'
+                              : null,
+                          prefixSvg: SvgPicture.string(
+                            AppSvgIcons.username,
                             width: 20,
                             height: 20,
-                            colorFilter: ColorFilter.mode(
-                              const Color(0xFF3927D6),
+                            colorFilter: const ColorFilter.mode(
+                              Color(0xFF3927D6),
                               BlendMode.srcIn,
                             ),
                           ),
-                          onPressed: () => setState(() => _obscure = !_obscure),
+                          verticalPadding: 10,
                         ),
-                        verticalPadding: 10,
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          const Spacer(),
-                          TextButton(
-                            onPressed: isLoading ? null : () {},
-                            child: const Text('Quên mật khẩu?'),
+                        const SizedBox(height: 18),
+                        _ModernField(
+                          controller: _passwordController,
+                          label: 'Mật khẩu',
+                          isPassword: true,
+                          obscure: _obscure,
+                          onToggleObscure: () =>
+                              setState(() => _obscure = !_obscure),
+                          validator: (v) => (v == null || v.isEmpty)
+                              ? 'Vui lòng nhập mật khẩu'
+                              : null,
+                          prefixSvg: SvgPicture.string(
+                            AppSvgIcons.lock,
+                            width: 20,
+                            height: 20,
+                            colorFilter: const ColorFilter.mode(
+                              Color(0xFF3927D6),
+                              BlendMode.srcIn,
+                            ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      _PrimaryGradientButton(
-                        onPressed: (isLoading || _googleLoading) ? null : _submit,
-                        loading: isLoading,
-                        label: 'Đăng nhập',
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 12),
-                            child: Text('Hoặc', style: TextStyle(fontSize: 12, letterSpacing: .5)),
+                          suffixWidget: IconButton(
+                            splashRadius: 20,
+                            icon: SvgPicture.string(
+                              _obscure ? AppSvgIcons.eye : AppSvgIcons.eyeoff,
+                              width: 20,
+                              height: 20,
+                              colorFilter: ColorFilter.mode(
+                                const Color(0xFF3927D6),
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            onPressed: () =>
+                                setState(() => _obscure = !_obscure),
                           ),
-                          Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
-                        ],
-                      ),
-                      const SizedBox(height: 18),
-                      _GoogleOutlinedButton(
-                        onPressed: (isLoading || _googleLoading) ? null : _loginWithGoogle,
-                        loading: _googleLoading,
-                      ),
+                          verticalPadding: 10,
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            const Spacer(),
+                            TextButton(
+                              onPressed: isLoading ? null : () {},
+                              child: const Text('Quên mật khẩu?'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        _PrimaryGradientButton(
+                          onPressed: (isLoading || _googleLoading)
+                              ? null
+                              : _submit,
+                          loading: isLoading,
+                          label: 'Đăng nhập',
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 1,
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              child: Text(
+                                'Hoặc',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  letterSpacing: .5,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 1,
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 18),
+                        _GoogleOutlinedButton(
+                          onPressed: (isLoading || _googleLoading)
+                              ? null
+                              : _loginWithGoogle,
+                          loading: _googleLoading,
+                        ),
                       ],
                     ),
                   ),
@@ -215,7 +254,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 42),
                 Text(
                   'Bằng việc tiếp tục bạn đồng ý với Điều khoản & Chính sách',
-                  style: TextStyle(color: Colors.grey[500], fontSize: 11),
+                  style: TextStyle(color: Colors.black54, fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -225,17 +264,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ),
     );
   }
-
-
-  // Old glass & glow helpers removed for simplified UI
-
 }
 
 class _ModernField extends StatefulWidget {
   final TextEditingController controller;
   final String label;
   final bool isPassword;
-  final bool? obscure; // controlled from parent if password
+  final bool? obscure;
   final VoidCallback? onToggleObscure;
   final String? Function(String?)? validator;
   final TextInputType? textInputType;
@@ -285,7 +320,9 @@ class _ModernFieldState extends State<_ModernField> {
       curve: Curves.easeOut,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
-        color: focused ? const Color(0xFF3927D6).withOpacity(.06) : const Color(0xFFF5F7FA),
+        color: focused
+            ? const Color(0xFF3927D6).withOpacity(.06)
+            : const Color(0xFFF5F7FA),
         boxShadow: focused
             ? AppShadows.subtle
             : (_hovering ? AppShadows.subtle : const []),
@@ -315,22 +352,32 @@ class _ModernFieldState extends State<_ModernField> {
                   focusNode: _focusNode,
                   controller: widget.controller,
                   keyboardType: widget.textInputType,
-                  obscureText: widget.isPassword ? (widget.obscure ?? true) : false,
+                  obscureText: widget.isPassword
+                      ? (widget.obscure ?? true)
+                      : false,
                   validator: widget.validator,
                   decoration: InputDecoration(
                     labelText: widget.label,
                     labelStyle: TextStyle(
                       fontSize: 14,
-                      color: focused ? const Color(0xFF3927D6) : Colors.grey[600],
+                      color: focused
+                          ? const Color(0xFF3927D6)
+                          : Colors.grey[600],
                     ),
                     floatingLabelStyle: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF3927D6),
                     ),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: widget.verticalPadding),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: widget.verticalPadding,
+                    ),
                   ),
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
               if (widget.suffixWidget != null)
@@ -344,9 +391,13 @@ class _ModernFieldState extends State<_ModernField> {
                   child: IconButton(
                     splashRadius: 20,
                     icon: Icon(
-                      (widget.obscure ?? true) ? Icons.visibility : Icons.visibility_off,
+                      (widget.obscure ?? true)
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                       size: 20,
-                      color: focused ? const Color(0xFF3927D6) : Colors.grey[600],
+                      color: focused
+                          ? const Color(0xFF3927D6)
+                          : Colors.grey[600],
                     ),
                     onPressed: widget.onToggleObscure,
                   ),
@@ -363,7 +414,11 @@ class _PrimaryGradientButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final bool loading;
   final String label;
-  const _PrimaryGradientButton({required this.onPressed, required this.loading, required this.label});
+  const _PrimaryGradientButton({
+    required this.onPressed,
+    required this.loading,
+    required this.label,
+  });
 
   @override
   State<_PrimaryGradientButton> createState() => _PrimaryGradientButtonState();
@@ -403,20 +458,20 @@ class _PrimaryGradientButtonState extends State<_PrimaryGradientButton> {
               boxShadow: disabled
                   ? []
                   : (_hover
-                      ? [
-                          const BoxShadow(
-                            color: Color(0x26000000),
-                            blurRadius: 18,
-                            offset: Offset(0, 6),
-                          )
-                        ]
-                      : const [
-                          BoxShadow(
-                            color: Color(0x1F000000),
-                            blurRadius: 14,
-                            offset: Offset(0, 6),
-                          )
-                        ]),
+                        ? [
+                            const BoxShadow(
+                              color: Color(0x26000000),
+                              blurRadius: 18,
+                              offset: Offset(0, 6),
+                            ),
+                          ]
+                        : const [
+                            BoxShadow(
+                              color: Color(0x1F000000),
+                              blurRadius: 14,
+                              offset: Offset(0, 6),
+                            ),
+                          ]),
             ),
             child: Material(
               color: Colors.transparent,
@@ -430,7 +485,10 @@ class _PrimaryGradientButtonState extends State<_PrimaryGradientButton> {
                         ? const SizedBox(
                             width: 22,
                             height: 22,
-                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
                           )
                         : Text(
                             widget.label,
@@ -476,8 +534,8 @@ class _GoogleOutlinedButtonState extends State<_GoogleOutlinedButton> {
         onExit: (_) => setState(() => _hover = false),
         child: GestureDetector(
           onTapDown: disabled ? null : (_) => setState(() => _pressed = true),
-            onTapCancel: () => setState(() => _pressed = false),
-            onTapUp: (_) => setState(() => _pressed = false),
+          onTapCancel: () => setState(() => _pressed = false),
+          onTapUp: (_) => setState(() => _pressed = false),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeOut,
@@ -488,16 +546,21 @@ class _GoogleOutlinedButtonState extends State<_GoogleOutlinedButton> {
               border: Border.all(
                 color: disabled
                     ? const Color(0xFFE0E3E9)
-                    : (_hover ? const Color(0xFF8E95A3) : const Color(0xFFD5DAE1)),
+                    : (_hover
+                          ? const Color(0xFF8E95A3)
+                          : const Color(0xFFD5DAE1)),
               ),
               boxShadow: disabled
                   ? []
                   : (_hover
-                      ? [
-                          const BoxShadow(
-                              color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4))
-                        ]
-                      : AppShadows.subtle),
+                        ? [
+                            const BoxShadow(
+                              color: Color(0x14000000),
+                              blurRadius: 12,
+                              offset: Offset(0, 4),
+                            ),
+                          ]
+                        : AppShadows.subtle),
             ),
             child: Material(
               color: Colors.transparent,
@@ -505,7 +568,10 @@ class _GoogleOutlinedButtonState extends State<_GoogleOutlinedButton> {
                 borderRadius: BorderRadius.circular(16),
                 onTap: disabled ? null : widget.onPressed,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 14),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 15,
+                    horizontal: 14,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
@@ -526,14 +592,16 @@ class _GoogleOutlinedButtonState extends State<_GoogleOutlinedButton> {
                       ],
                       Flexible(
                         child: Text(
-                          widget.loading ? 'Đang xử lý...' : 'Tiếp tục với Google',
+                          widget.loading
+                              ? 'Đang xử lý...'
+                              : 'Đăng nhập với Google',
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 14.5,
                             letterSpacing: .2,
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
