@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:my_app/core/constants/app_colors.dart';
 import 'package:my_app/app/router.dart';
 import 'package:my_app/core/constants/app_svg_icons.dart';
+// (Notification unread badge handled in top bar; no provider needed here.)
 
 class NavigationMenu extends StatefulWidget {
   final Widget child;
@@ -166,3 +167,5 @@ class _LearningFloatingButton extends StatelessWidget {
     );
   }
 }
+
+// Removed _NotificationIcon (badge now only at top bar)

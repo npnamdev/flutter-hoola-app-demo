@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_app/core/constants/app_svg_icons.dart';
+import 'package:my_app/core/constants/app_colors.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_app/features/notification/data/unread_notifications_provider.dart';
 
-class TopBar extends StatelessWidget {
+class TopBar extends ConsumerWidget {
   final String userName;
   final String avatarUrl;
   final VoidCallback? onNotification;
@@ -25,7 +28,7 @@ class TopBar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
       height: kTopBarHeight,
       child: Row(
@@ -37,7 +40,10 @@ class TopBar extends StatelessWidget {
               child: Center(
                 child: Stack(
                   children: [
-                    CircleAvatar(radius: 25, backgroundImage: NetworkImage(avatarUrl)),
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundImage: NetworkImage(avatarUrl),
+                    ),
                     Positioned(
                       right: 2,
                       bottom: 2,
@@ -45,7 +51,7 @@ class TopBar extends StatelessWidget {
                         width: 12,
                         height: 12,
                         decoration: BoxDecoration(
-                          color: Colors.greenAccent,
+                          color: AppColors.primary,
                           border: Border.all(color: Colors.white, width: 2),
                           shape: BoxShape.circle,
                         ),
@@ -102,9 +108,13 @@ class TopBar extends StatelessWidget {
                 if (showSearchIcon)
                   Hero(
                     tag: 'search_bar_hero',
-                    flightShuttleBuilder: (context, animation, direction, fromCtx, toCtx) {
-                      return FadeTransition(opacity: animation, child: toCtx.widget);
-                    },
+                    flightShuttleBuilder:
+                        (context, animation, direction, fromCtx, toCtx) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: toCtx.widget,
+                          );
+                        },
                     child: _SvgIconButton(
                       svg: AppSvgIcons.search,
                       onTap: onSearch,
@@ -112,10 +122,9 @@ class TopBar extends StatelessWidget {
                     ),
                   ),
                 if (showSearchIcon) const SizedBox(width: 8),
-                _SvgIconButton(
-                  svg: AppSvgIcons.bell,
-                  onTap: onNotification,
+                _NotificationBellButton(
                   lightMode: lightMode,
+                  onTap: onNotification,
                 ),
               ],
             ),
@@ -155,6 +164,78 @@ class _SvgIconButton extends StatelessWidget {
             BlendMode.srcIn,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _NotificationBellButton extends ConsumerWidget {
+  final VoidCallback? onTap;
+  final bool lightMode;
+  const _NotificationBellButton({this.onTap, this.lightMode = true});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(unreadNotificationsCountProvider);
+    final show = count > 0;
+    final label = count > 9 ? '9+' : '$count';
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(9),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: lightMode
+                  ? Colors.grey.shade200
+                  : Colors.white.withOpacity(.15),
+            ),
+            child: SvgPicture.string(
+              AppSvgIcons.bell,
+              width: 20,
+              height: 20,
+              colorFilter: ColorFilter.mode(
+                lightMode ? Colors.purple : Colors.white,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+          if (show)
+            Positioned(
+              top: -2,
+              right: -2,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: Colors.white, width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(.20),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                constraints: const BoxConstraints(minWidth: 18, minHeight: 16),
+                child: Center(
+                  child: Text(
+                    label,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      height: 1.0,
+                      letterSpacing: -.2,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
