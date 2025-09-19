@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/core/constants/app_colors.dart';
 import 'package:my_app/core/constants/app_tokens.dart';
-import 'package:my_app/core/constants/app_svg_icons.dart';
 import 'dart:collection';
 
 class NotificationItemData {

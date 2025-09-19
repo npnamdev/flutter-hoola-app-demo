@@ -18,7 +18,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
     AppRoutes.homeShell,
     AppRoutes.schedule,
     AppRoutes.learning,
-    AppRoutes.notification,
+    AppRoutes.report, // replaced old notification route
     AppRoutes.profile,
   ];
 

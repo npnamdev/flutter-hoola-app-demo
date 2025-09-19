@@ -4,7 +4,8 @@ import 'package:my_app/features/navigation/navigation_menu.dart';
 import 'package:my_app/features/home/presentation/pages/home_screen.dart';
 // Replaced legacy LearningScreen with MyCoursesScreen as the primary learning tab
 import 'package:my_app/features/schedule/presentation/pages/schedule_screen.dart';
-import 'package:my_app/features/notification/presentation/pages/notification_screen.dart';
+// import 'package:my_app/features/notification/presentation/pages/notification_screen.dart'; // replaced by report screen
+import 'package:my_app/features/report/presentation/pages/report_screen.dart';
 import 'package:my_app/features/profile/presentation/pages/profile_screen.dart';
 import 'package:my_app/features/splash/splash_screen.dart';
 import 'package:my_app/features/auth/presentation/pages/login_screen.dart';
@@ -18,7 +19,7 @@ class AppRoutes {
   static const login = '/login';
   static const schedule = '/schedule';
   static const learning = '/learning';
-  static const notification = '/notification';
+  static const report = '/report';
   static const profile = '/profile';
   static const search = '/search';
 }
@@ -76,11 +77,11 @@ GoRouter createRouter() {
             ),
           ),
           GoRoute(
-            path: AppRoutes.notification,
-            name: 'notification',
+            path: AppRoutes.report,
+            name: 'report',
             pageBuilder: (context, state) => _buildFadePage(
               key: state.pageKey,
-              child: const NotificationScreen(),
+              child: const ReportScreen(),
             ),
           ),
           GoRoute(

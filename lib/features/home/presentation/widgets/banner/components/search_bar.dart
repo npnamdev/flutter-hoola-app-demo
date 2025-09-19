@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class SearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -77,30 +76,4 @@ class SearchBar extends StatelessWidget {
   }
 }
 
-class _FilterButton extends StatelessWidget {
-  final bool lightMode;
-  const _FilterButton({required this.lightMode});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(18),
-      onTap: () {},
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: const Color(0xFF3927D6),
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.indigo.withOpacity(0.25),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: const Icon(Iconsax.filter, color: Colors.white, size: 20),
-      ),
-    );
-  }
-}
+// Removed unused _FilterButton widget (was not referenced anywhere)
