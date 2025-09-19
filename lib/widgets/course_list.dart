@@ -23,16 +23,9 @@ class CourseCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.lg)),
-            child: Image.network(
-              course.imageUrl,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (c, o, s) => Container(
-                height: 110,
-                color: Colors.grey[200],
-                alignment: Alignment.center,
-                child: Icon(Icons.image, color: Colors.grey[500]),
-              ),
+            child: AspectRatio(
+              aspectRatio: 16 / 10,
+              child: _CourseImage(url: course.imageUrl),
             ),
           ),
 
@@ -75,6 +68,91 @@ class CourseCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CourseImage extends StatefulWidget {
+  final String url;
+  const _CourseImage({required this.url});
+
+  @override
+  State<_CourseImage> createState() => _CourseImageState();
+}
+
+class _CourseImageState extends State<_CourseImage> {
+  bool _loaded = false;
+  bool _error = false;
+
+  @override
+  Widget build(BuildContext context) {
+    if (_error || widget.url.isEmpty) {
+      return Container(
+        color: Colors.grey[200],
+        alignment: Alignment.center,
+        child: Icon(Icons.broken_image, color: Colors.grey[500], size: 30),
+      );
+    }
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        AnimatedOpacity(
+          opacity: _loaded ? 1 : 0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          child: Image.network(
+            widget.url,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, progress) {
+              if (progress == null) return child;
+              return const SizedBox.shrink();
+            },
+            errorBuilder: (c, o, s) {
+              setState(() => _error = true);
+              return const SizedBox.shrink();
+            },
+            frameBuilder: (context, child, frame, wasSync) {
+              if (frame != null && !_loaded) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) setState(() => _loaded = true);
+                });
+              }
+              return child;
+            },
+          ),
+        ),
+        if (!_loaded)
+          _ImagePlaceholder(),
+      ],
+    );
+  }
+}
+
+class _ImagePlaceholder extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.grey.shade200,
+            Colors.grey.shade100,
+          ],
+        ),
+      ),
+      child: Center(
+        child: SizedBox(
+          width: 26,
+          height: 26,
+          child: CircularProgressIndicator(
+            strokeWidth: 2.4,
+            valueColor: const AlwaysStoppedAnimation(Color(0xFF3927D6)),
+            backgroundColor: Colors.white,
+          ),
+        ),
       ),
     );
   }

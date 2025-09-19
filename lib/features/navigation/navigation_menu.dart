@@ -85,12 +85,12 @@ class _NavigationMenuState extends State<NavigationMenu> {
           destinations: [
             NavigationDestination(
               icon: SvgIcon(AppSvgIcons.home, color: AppColors.neutral, size: 24),
-              selectedIcon: SvgIcon(AppSvgIcons.home, color: AppColors.primary, size: 24),
+              selectedIcon: SvgIcon(AppSvgIcons.homeActive, color: AppColors.primary, size: 24),
               label: 'Trang chủ',
             ),
             NavigationDestination(
               icon: SvgIcon(AppSvgIcons.calendar, color: AppColors.neutral, size: 24),
-              selectedIcon: SvgIcon(AppSvgIcons.calendar, color: AppColors.primary, size: 24),
+              selectedIcon: SvgIcon(AppSvgIcons.calendarActive, color: AppColors.primary, size: 24),
               label: 'Lịch học',
             ),
             const NavigationDestination(
@@ -99,13 +99,13 @@ class _NavigationMenuState extends State<NavigationMenu> {
               label: '',
             ),
             NavigationDestination(
-              icon: SvgIcon(AppSvgIcons.bell, color: AppColors.neutral, size: 24),
-              selectedIcon: SvgIcon(AppSvgIcons.bell, color: AppColors.primary, size: 24),
-              label: 'Thông báo',
+              icon: SvgIcon(AppSvgIcons.report, color: AppColors.neutral, size: 24),
+              selectedIcon: SvgIcon(AppSvgIcons.reportActive, color: AppColors.primary, size: 24),
+              label: 'Báo cáo',
             ),
             NavigationDestination(
               icon: SvgIcon(AppSvgIcons.user, color: AppColors.neutral, size: 24),
-              selectedIcon: SvgIcon(AppSvgIcons.user, color: AppColors.primary, size: 24),
+              selectedIcon: SvgIcon(AppSvgIcons.userActive, color: AppColors.primary, size: 24),
               label: 'Tài khoản',
             ),
           ],
