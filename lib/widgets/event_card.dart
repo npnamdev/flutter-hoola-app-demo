@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_app/core/models/event.dart';
+import 'package:my_app/core/constants/app_tokens.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app/core/providers/event_providers.dart';
 
@@ -46,20 +47,14 @@ class _EventCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x1F000000), // 12% black
-            blurRadius: 6,
-            offset: Offset(0, 3),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.lg)),
             child: Image.network(
               event.imageUrl,
               height: 120,

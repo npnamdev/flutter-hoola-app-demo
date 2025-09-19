@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_app/core/models/course.dart';
+import 'package:my_app/core/constants/app_tokens.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app/core/providers/course_providers.dart';
 
@@ -14,20 +15,14 @@ class CourseCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24), // đồng bộ với CourseCardPro
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(.06),
-            blurRadius: 14,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.lg)),
             child: Image.network(
               course.imageUrl,
               width: double.infinity,
@@ -43,7 +38,7 @@ class CourseCard extends StatelessWidget {
 
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 12, 14, 12), // giống Pro
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

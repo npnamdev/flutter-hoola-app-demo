@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_section_models.dart';
+import 'package:my_app/core/constants/app_tokens.dart';
 
 class RecommendationsSection extends StatelessWidget {
   final List<Recommendation> items;
@@ -62,7 +63,7 @@ class _RecommendationCard extends StatelessWidget {
       child: AspectRatio(
         aspectRatio: 4 / 5,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppRadii.lg),
           child: Stack(
             fit: StackFit.expand,
             children: [

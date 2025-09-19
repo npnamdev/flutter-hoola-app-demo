@@ -452,11 +452,11 @@ class _SectionCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(18, 18, 18, 20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
-            blurRadius: 12,
+            color: Colors.black.withOpacity(.06),
+            blurRadius: 14,
             offset: const Offset(0, 6),
           ),
         ],

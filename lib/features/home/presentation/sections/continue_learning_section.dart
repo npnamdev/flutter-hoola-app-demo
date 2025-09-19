@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/core/constants/app_colors.dart';
+import 'package:my_app/core/constants/app_tokens.dart';
 import 'home_section_models.dart';
 
 class ContinueLearningSection extends StatelessWidget {
@@ -68,7 +69,7 @@ class _ContinueCard extends StatelessWidget {
           children: [
             Expanded(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppRadii.lg),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
@@ -117,7 +118,7 @@ class _ContinueCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             ClipRRect(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(AppRadii.sm),
               child: LinearProgressIndicator(
                 value: item.progress,
                 minHeight: 6,
