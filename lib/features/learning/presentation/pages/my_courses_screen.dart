@@ -35,13 +35,13 @@ class MyCoursesScreen extends ConsumerWidget {
                     ref.read(searchQueryProvider.notifier).state = v.trim(),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 16), // tăng khoảng cách giữa search bar và filter chips
             _FilterChips(
               current: filter,
               onSelect: (f) =>
                   ref.read(courseFilterProvider.notifier).state = f,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             Expanded(
               child: coursesAsync.when(
                 data: (list) {
@@ -103,27 +103,6 @@ class MyCoursesScreen extends ConsumerWidget {
   }
 }
 
-class _StatPill extends StatelessWidget {
-  final String label;
-  final String value;
-  const _StatPill({required this.label, required this.value});
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: GoogleFonts.lato(fontWeight: FontWeight.w700, fontSize: 16),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: GoogleFonts.lato(fontSize: 12, color: Colors.grey[600]),
-        ),
-      ],
-    );
-  }
-}
 
 class _SearchBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
@@ -144,24 +123,24 @@ class _SearchBarState extends State<_SearchBar> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      height: 60, // taller input per request
+      height: 50, // giảm chiều cao
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(20), // bo góc ít hơn
+        border: Border.all(color: Colors.grey.shade200), // viền nhạt hơn
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
-            blurRadius: 12,
-            offset: const Offset(0, 5),
+            color: Colors.black.withOpacity(.04),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
-          const SvgIcon(AppSvgIcons.search, size: 22, color: Colors.black54),
-          const SizedBox(width: 10),
+          const SvgIcon(AppSvgIcons.search, size: 20, color: Colors.black54),
+          const SizedBox(width: 8),
           Expanded(
             child: TextField(
               controller: controller,
@@ -169,13 +148,13 @@ class _SearchBarState extends State<_SearchBar> {
                 setState(() {}); // rebuild for clear icon visibility
                 widget.onChanged(v);
               },
-              style: GoogleFonts.lato(fontSize: 15, fontWeight: FontWeight.w500),
+              style: GoogleFonts.lato(fontSize: 14, fontWeight: FontWeight.w500),
               decoration: const InputDecoration(
                 hintText: 'Tìm kiếm khoá học...',
-                hintStyle: TextStyle(fontSize: 14, color: Colors.black45),
+                hintStyle: TextStyle(fontSize: 13, color: Colors.black45),
                 border: InputBorder.none,
                 isDense: true,
-                contentPadding: EdgeInsets.only(bottom: 2),
+                contentPadding: EdgeInsets.only(bottom: 0),
               ),
             ),
           ),
@@ -230,7 +209,7 @@ class _FilterChips extends StatelessWidget {
     }
 
     return SizedBox(
-      height: 46,
+      height: 40, // giảm tổng chiều cao vùng chips
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -241,10 +220,10 @@ class _FilterChips extends StatelessWidget {
             onTap: () => onSelect(f),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), // giảm padding dọc
               decoration: BoxDecoration(
                 color: selected ? const Color(0xFF3927D6) : Colors.white,
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(14), // bớt tròn hơn
                 border: Border.all(
                   color: selected
                       ? const Color(0xFF3927D6)
@@ -254,14 +233,14 @@ class _FilterChips extends StatelessWidget {
                   if (selected)
                     BoxShadow(
                       color: const Color(0xFF3927D6).withOpacity(.35),
-                      blurRadius: 14,
-                      offset: const Offset(0, 6),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
                     )
                   else
                     BoxShadow(
                       color: Colors.black.withOpacity(.05),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
                     ),
                 ],
               ),
@@ -269,7 +248,7 @@ class _FilterChips extends StatelessWidget {
                 child: Text(
                   label(f),
                   style: GoogleFonts.lato(
-                    fontSize: 13,
+                    fontSize: 12.5, // giảm nhẹ kích thước chữ chip
                     fontWeight: FontWeight.w600,
                     color: selected ? Colors.white : Colors.black87,
                   ),
@@ -296,6 +275,7 @@ class CourseCardPro extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         onTap: () {},
         child: Container(
+          height: 260, // Chiều cao cố định cho card
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(24),
@@ -308,7 +288,7 @@ class CourseCardPro extends StatelessWidget {
             ],
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.vertical(
@@ -327,55 +307,58 @@ class CourseCardPro extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      course.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.lato(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        height: 1.25,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      course.author,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.lato(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: LinearProgressIndicator(
-                        value: course.progress,
-                        minHeight: 10,
-                        backgroundColor: const Color(0xFFE9ECF2),
-                        valueColor: const AlwaysStoppedAnimation(
-                          Color(0xFF3927D6),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        course.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.lato(
+                          fontSize: 13, // giảm kích thước tiêu đề
+                          fontWeight: FontWeight.w700,
+                          height: 1.25,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      course.progress >= 1.0
-                          ? 'Đã hoàn thành'
-                          : 'Hoàn thành ${(course.progress * 100).round()}%',
-                      style: GoogleFonts.lato(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                      const SizedBox(height: 6),
+                      Text(
+                        course.author,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.lato(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 10),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: LinearProgressIndicator(
+                          value: course.progress,
+                          minHeight: 6, // giảm chiều cao progress
+                          backgroundColor: const Color(0xFFE9ECF2),
+                          valueColor: const AlwaysStoppedAnimation(
+                            Color(0xFF3927D6),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        course.progress >= 1.0
+                            ? 'Đã hoàn thành'
+                            : 'Hoàn thành ${(course.progress * 100).round()}%',
+                        style: GoogleFonts.lato(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_app/core/constants/app_colors.dart';
 import 'package:my_app/core/models/course.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app/core/providers/course_providers.dart';
@@ -15,12 +14,12 @@ class CourseCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(24), // đồng bộ với CourseCardPro
         boxShadow: [
           BoxShadow(
-            color: AppColors.cardShadow,
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+            color: Colors.black.withOpacity(.06),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -28,13 +27,13 @@ class CourseCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             child: Image.network(
               course.imageUrl,
               width: double.infinity,
               fit: BoxFit.cover,
               errorBuilder: (c, o, s) => Container(
-                height: 140,
+                height: 110,
                 color: Colors.grey[200],
                 alignment: Alignment.center,
                 child: Icon(Icons.image, color: Colors.grey[500]),
@@ -44,7 +43,7 @@ class CourseCard extends StatelessWidget {
 
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 12), // giống Pro
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -53,8 +52,9 @@ class CourseCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.lato(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      height: 1.25,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -67,12 +67,12 @@ class CourseCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(10),
                     child: LinearProgressIndicator(
                       value: course.progress,
-                      backgroundColor: Colors.grey[300],
-                      color: AppColors.primary,
                       minHeight: 6,
+                      backgroundColor: const Color(0xFFE9ECF2),
+                      valueColor: const AlwaysStoppedAnimation(Color(0xFF3927D6)),
                     ),
                   ),
                 ],
@@ -96,7 +96,7 @@ class CourseList extends ConsumerWidget {
     final cardWidth = (screenWidth - horizontalPadding) / 2.5;
 
     return SizedBox(
-      height: 246,
+      height: 230, // điều chỉnh chiều cao phù hợp với header mới
       child: asyncCourses.when(
         data: (courses) => ListView.builder(
           scrollDirection: Axis.horizontal,
@@ -105,7 +105,7 @@ class CourseList extends ConsumerWidget {
             itemBuilder: (context, index) {
               final course = courses[index];
               return Container(
-                margin: const EdgeInsets.only(right: 12, top: 8, bottom: 8),
+                margin: const EdgeInsets.only(right: 14, top: 4, bottom: 10),
                 width: cardWidth,
                 child: CourseCard(course: course),
               );
