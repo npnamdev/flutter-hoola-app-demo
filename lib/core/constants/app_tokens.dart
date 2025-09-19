@@ -39,4 +39,13 @@ class AppShadows {
           offset: const Offset(0, 8),
         ),
       ];
+
+  // Soft shadow for search bar / chips
+  static List<BoxShadow> get soft => [
+        BoxShadow(
+          color: Colors.black.withOpacity(.04),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ];
 }

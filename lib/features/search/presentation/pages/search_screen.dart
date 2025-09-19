@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:my_app/core/constants/app_svg_icons.dart';
+import 'package:my_app/core/constants/app_tokens.dart';
+import 'package:my_app/core/constants/app_colors.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -22,7 +25,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: Colors.white,
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -32,20 +35,25 @@ class _SearchScreenState extends State<SearchScreen> {
               query: _query,
               onChanged: (v) => setState(() => _query = v.trim()),
             ),
-            const Divider(height: 1),
             Expanded(
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
                 switchInCurve: Curves.easeOutCubic,
                 switchOutCurve: Curves.easeInCubic,
                 child: _query.isEmpty
-                    ? _Suggestions(onSelect: (s) {
-                        setState(() {
-                          _query = s;
-                          _controller.text = s;
-                        });
-                      })
-                    : _Results(query: _query),
+                    ? _Suggestions(
+                        key: const ValueKey('search_suggestions_panel'),
+                        onSelect: (s) {
+                          setState(() {
+                            _query = s;
+                            _controller.text = s;
+                          });
+                        },
+                      )
+                    : _Results(
+                        key: const ValueKey('search_results_list'),
+                        query: _query,
+                      ),
               ),
             ),
           ],
@@ -60,78 +68,121 @@ class _Header extends StatelessWidget {
   final TextEditingController controller;
   final String query;
   final ValueChanged<String> onChanged;
-  const _Header({required this.controller, required this.query, required this.onChanged});
+  const _Header({
+    required this.controller,
+    required this.query,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 14),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          bottom: BorderSide(color: Colors.black.withOpacity(.06), width: 1),
+        ),
+      ),
       child: Row(
         children: [
-          InkWell(
-            borderRadius: BorderRadius.circular(28),
-            onTap: () => Navigator.of(context).maybePop(),
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [Color(0xFF6A5AE0), Color(0xFF8E7CFA)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+          // Expanded search bar now takes full width minus trailing home button
+          Expanded(
+            child: Hero(
+              tag: 'search_bar_hero',
+              flightShuttleBuilder: (context, animation, direction, fromCtx, toCtx) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: toCtx.widget,
+                );
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                height: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(AppRadii.lg),
+                  border: Border.all(color: Colors.grey.shade200),
+                  boxShadow: AppShadows.soft,
+                ),
+                child: Row(
+                  children: [
+                    const SvgIcon(AppSvgIcons.search, size: 20, color: Colors.black54),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: TextField(
+                        key: const ValueKey('search_field'),
+                        controller: controller,
+                        onChanged: onChanged,
+                        autofocus: true,
+                        style: GoogleFonts.lato(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        decoration: const InputDecoration(
+                          hintText: 'Tìm kiếm khoá học, sự kiện...',
+                          hintStyle: TextStyle(fontSize: 13, color: Colors.black45),
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.only(bottom: 0),
+                        ),
+                      ),
+                    ),
+                    AnimatedOpacity(
+                      opacity: query.isNotEmpty ? 1 : 0,
+                      duration: const Duration(milliseconds: 180),
+                      child: GestureDetector(
+                        onTap: () {
+                          controller.clear();
+                          onChanged('');
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey.shade200,
+                          ),
+                          child: const Icon(Icons.close, size: 16, color: Colors.black54),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: const Icon(Icons.arrow_back_ios_new, size: 20, color: Colors.white),
             ),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(28),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  const Icon(LucideIcons.search, size: 20, color: Colors.black54),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextField(
-                      controller: controller,
-                      onChanged: onChanged,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        hintText: 'Tìm kiếm khoá học, sự kiện...',
-                        border: InputBorder.none,
-                        isDense: true,
-                      ),
-                      style: GoogleFonts.lato(fontSize: 16, fontWeight: FontWeight.w500),
+          const SizedBox(width: 10),
+          Material(
+            color: Colors.white,
+            shape: const CircleBorder(),
+            child: InkWell(
+              customBorder: const CircleBorder(),
+              onTap: () {
+                context.go('/home');
+              },
+              child: Ink(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.black.withOpacity(.08)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(.05),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
                     ),
+                  ],
+                  color: Colors.white,
+                ),
+                child: const Center(
+                  child: SvgIcon(
+                    AppSvgIcons.home,
+                    size: 19,
+                    color: Colors.black87,
                   ),
-                  if (query.isNotEmpty)
-                    GestureDetector(
-                      onTap: () {
-                        controller.clear();
-                        onChanged('');
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xFFE5E5E5),
-                        ),
-                        child: const Icon(Icons.close, size: 16, color: Colors.black54),
-                      ),
-                    ),
-                ],
+                ),
               ),
             ),
           ),
@@ -143,96 +194,63 @@ class _Header extends StatelessWidget {
 
 class _Suggestions extends StatelessWidget {
   final ValueChanged<String> onSelect;
-  const _Suggestions({required this.onSelect});
+  const _Suggestions({super.key, required this.onSelect});
 
   @override
   Widget build(BuildContext context) {
     final suggestions = [
-      'Flutter căn bản', 'Kotlin nâng cao', 'Data Science',
-      'UI/UX', 'Web Fullstack', 'AI cơ bản', 'Dart tips', 'Design System'
+      'Flutter căn bản',
+      'Kotlin nâng cao',
+      'Data Science',
+      'UI/UX',
+      'Web Fullstack',
+      'AI cơ bản',
+      'Dart tips',
+      'Design System',
     ];
-    final recents = ['Flutter', 'Workshop', 'UI'];
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // --- Gợi ý phổ biến ---
-          Row(
-            children: [
-              const Icon(Icons.local_fire_department, color: Colors.orange, size: 20),
-              const SizedBox(width: 6),
-              Text(
-                'Gợi ý phổ biến',
-                style: GoogleFonts.lato(fontSize: 17, fontWeight: FontWeight.w700),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: suggestions.map((s) => _Chip(label: s, onTap: () => onSelect(s))).toList(),
-          ),
-
-          const SizedBox(height: 32),
-
-          // --- Từ khoá gần đây ---
-          Row(
-            children: [
-              const Icon(Icons.history, color: Colors.indigo, size: 20),
-              const SizedBox(width: 6),
-              Text(
-                'Tìm kiếm gần đây',
-                style: GoogleFonts.lato(fontSize: 17, fontWeight: FontWeight.w700),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Column(
-            children: recents.map((r) {
-              return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: Colors.grey.shade200),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.03),
-                      blurRadius: 6,
-                      offset: const Offset(0, 3),
-                    )
-                  ],
+    // Only show popular suggestions now (recent searches removed as per request)
+    return Align(
+      alignment: Alignment.topCenter,
+      child: SingleChildScrollView(
+  padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(
+                  Icons.local_fire_department,
+                  color: Colors.orange,
+                  size: 20,
                 ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.history, size: 18, color: Colors.grey),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(r, style: GoogleFonts.lato(fontSize: 15, fontWeight: FontWeight.w500)),
-                    ),
-                    IconButton(
-                      onPressed: () => onSelect(r),
-                      icon: const Icon(Icons.north_east, size: 18, color: Colors.indigo),
-                    )
-                  ],
+                const SizedBox(width: 6),
+                Text(
+                  'Gợi ý phổ biến',
+                  style: GoogleFonts.lato(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              );
-            }).toList(),
-          ),
-        ],
+              ],
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: suggestions
+                  .map((s) => _Chip(label: s, onTap: () => onSelect(s)))
+                  .toList(),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-
 class _Results extends StatelessWidget {
   final String query;
-  const _Results({required this.query});
+  const _Results({super.key, required this.query});
 
   @override
   Widget build(BuildContext context) {
@@ -266,58 +284,65 @@ class _ResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.grey.shade200),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF6A5AE0), Color(0xFF8E7CFA)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+    return InkWell(
+      borderRadius: BorderRadius.circular(AppRadii.lg),
+      onTap: () {},
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        curve: Curves.easeOut,
+        margin: const EdgeInsets.only(bottom: 14),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          border: Border.all(color: Colors.black.withOpacity(.05)),
+          boxShadow: AppShadows.soft,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(.10),
+                borderRadius: BorderRadius.circular(AppRadii.md),
               ),
-              borderRadius: BorderRadius.circular(14),
+              child: const Icon(
+                Icons.play_circle_fill,
+                color: AppColors.primary,
+                size: 28,
+              ),
             ),
-            child: const Icon(Icons.play_circle_fill, color: Colors.white, size: 30),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: GoogleFonts.lato(fontSize: 15, fontWeight: FontWeight.w700)),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: GoogleFonts.lato(fontSize: 13, color: Colors.black54),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.lato(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      height: 1.15,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: GoogleFonts.lato(
+                      fontSize: 13,
+                      color: Colors.black54,
+                      height: 1.3,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.arrow_outward, size: 20, color: Color(0xFF6A5AE0)),
-            onPressed: () {},
-          ),
-        ],
+            const Icon(Icons.arrow_outward, size: 20, color: AppColors.primary),
+          ],
+        ),
       ),
     );
   }
@@ -331,23 +356,23 @@ class _Chip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      borderRadius: BorderRadius.circular(26),
+      borderRadius: BorderRadius.circular(30),
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 160),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFEEF0FF), Color(0xFFF5F5FF)],
-          ),
-          borderRadius: BorderRadius.circular(26),
-          border: Border.all(color: Colors.indigo.shade100),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: Colors.black.withOpacity(.06)),
+          boxShadow: AppShadows.soft,
         ),
         child: Text(
           label,
           style: GoogleFonts.lato(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Colors.indigo.shade700,
+            color: AppColors.primary,
           ),
         ),
       ),

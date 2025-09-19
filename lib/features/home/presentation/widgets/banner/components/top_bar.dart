@@ -100,10 +100,16 @@ class TopBar extends StatelessWidget {
             child: Row(
               children: [
                 if (showSearchIcon)
-                  _SvgIconButton(
-                    svg: AppSvgIcons.search,
-                    onTap: onSearch,
-                    lightMode: lightMode,
+                  Hero(
+                    tag: 'search_bar_hero',
+                    flightShuttleBuilder: (context, animation, direction, fromCtx, toCtx) {
+                      return FadeTransition(opacity: animation, child: toCtx.widget);
+                    },
+                    child: _SvgIconButton(
+                      svg: AppSvgIcons.search,
+                      onTap: onSearch,
+                      lightMode: lightMode,
+                    ),
                   ),
                 if (showSearchIcon) const SizedBox(width: 8),
                 _SvgIconButton(

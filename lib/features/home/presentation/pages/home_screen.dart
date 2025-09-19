@@ -130,7 +130,12 @@ class _HomeScreenState extends State<HomeScreen>
                           userName: 'Phương Nam',
                           lightMode: true,
                           showSearchIcon: true,
-                          onSearch: () {},
+                          onSearch: () {
+                            if (mounted) {
+                              // Sử dụng push để có thể pop quay lại màn hình home
+                              context.push(AppRoutes.search);
+                            }
+                          },
                           onNotification: _togglePanel,
                         ),
                       ),
