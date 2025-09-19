@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart'; // still used elsewhere
+import 'package:my_app/core/constants/app_svg_icons.dart';
 import 'package:my_app/core/providers/course_providers.dart';
 import 'package:my_app/core/models/course.dart';
 
@@ -26,11 +27,6 @@ class MyCoursesScreen extends ConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 14),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: _HeaderStats(),
-            ),
             const SizedBox(height: 18),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -45,7 +41,7 @@ class MyCoursesScreen extends ConsumerWidget {
               onSelect: (f) =>
                   ref.read(courseFilterProvider.notifier).state = f,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
             Expanded(
               child: coursesAsync.when(
                 data: (list) {
@@ -107,103 +103,6 @@ class MyCoursesScreen extends ConsumerWidget {
   }
 }
 
-class _HeaderStats extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final asyncCourses = ref.watch(myCoursesProvider);
-    return asyncCourses.when(
-      data: (courses) {
-        final total = courses.length;
-        final inProgress = courses
-            .where((c) => c.progress > 0 && c.progress < 1)
-            .length;
-        final completed = courses.where((c) => c.progress >= 1).length;
-        final avgProgress = courses.isEmpty
-            ? 0.0
-            : courses.map((c) => c.progress).reduce((a, b) => a + b) / total;
-        return Container(
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(26),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(.06),
-                blurRadius: 18,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEFF0FF),
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: const Icon(
-                      Iconsax.play_circle,
-                      color: Color(0xFF3927D6),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Khoá học của tôi',
-                      style: GoogleFonts.lato(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _StatPill(label: 'Tổng', value: '$total'),
-                  _StatPill(label: 'Đang học', value: '$inProgress'),
-                  _StatPill(label: 'Hoàn thành', value: '$completed'),
-                  _StatPill(
-                    label: 'Tiến độ',
-                    value: '${(avgProgress * 100).round()}%',
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(14),
-                child: LinearProgressIndicator(
-                  value: avgProgress,
-                  minHeight: 14,
-                  backgroundColor: const Color(0xFFE9ECF2),
-                  valueColor: const AlwaysStoppedAnimation(Color(0xFF3927D6)),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-      loading: () => Container(
-        height: 150,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(26),
-        ),
-        alignment: Alignment.center,
-        child: const CircularProgressIndicator(),
-      ),
-      error: (e, st) => const SizedBox.shrink(),
-    );
-  }
-}
-
 class _StatPill extends StatelessWidget {
   final String label;
   final String value;
@@ -243,44 +142,62 @@ class _SearchBarState extends State<_SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      height: 60, // taller input per request
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(32),
         border: Border.all(color: Colors.grey.shade300),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            blurRadius: 12,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
-          const Icon(Iconsax.search_normal_1, size: 20, color: Colors.black54),
-          const SizedBox(width: 8),
+          const SvgIcon(AppSvgIcons.search, size: 22, color: Colors.black54),
+          const SizedBox(width: 10),
           Expanded(
             child: TextField(
               controller: controller,
-              onChanged: widget.onChanged,
+              onChanged: (v) {
+                setState(() {}); // rebuild for clear icon visibility
+                widget.onChanged(v);
+              },
+              style: GoogleFonts.lato(fontSize: 15, fontWeight: FontWeight.w500),
               decoration: const InputDecoration(
                 hintText: 'Tìm kiếm khoá học...',
+                hintStyle: TextStyle(fontSize: 14, color: Colors.black45),
                 border: InputBorder.none,
                 isDense: true,
+                contentPadding: EdgeInsets.only(bottom: 2),
               ),
             ),
           ),
-          if (controller.text.isNotEmpty)
-            GestureDetector(
+          AnimatedOpacity(
+            opacity: controller.text.isNotEmpty ? 1 : 0,
+            duration: const Duration(milliseconds: 180),
+            child: GestureDetector(
               onTap: () {
                 controller.clear();
                 widget.onChanged('');
                 setState(() {});
               },
-              child: const Icon(Icons.close, size: 18, color: Colors.black45),
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey.shade200,
+                ),
+                child: const Icon(Icons.close, size: 16, color: Colors.black54),
+              ),
             ),
+          ),
         ],
       ),
     );
